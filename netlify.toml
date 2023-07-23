@@ -1,0 +1,20 @@
+[build]
+	command = "vite build"
+
+[dev]
+    command = "vite"
+
+[[redirects]]
+    from = "/"
+    to = "/index.html"
+    status = 200
+
+[[headers]]
+    for = "/manifest.webmanifest"
+[headers.values]
+    Content-Type = "application/manifest+json"
+
+[context.dev.environment]
+    NODE_ENV = "DEV"
+[context.deploy-preview.environment]
+    NODE_ENV = "PREVIEW"
