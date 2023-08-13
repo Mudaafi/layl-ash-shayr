@@ -26,6 +26,11 @@ const router = createRouter({
       name: 'poetry',
       component: () => import('../views/PoetryView.vue'),
       props: true
+    },
+    {
+      path: '/:catchAll(.*)',
+      name: '404',
+      component: () => import('../views/404View.vue')
     }
   ]
 })

@@ -4,11 +4,12 @@
 
 body {
   // Dark Mode
-  background: url('./textured-bg-dark.png') repeat;
+  // background: url('./textured-bg-dark.png') repeat;
   background-color: $bg;
   font-family: Handlee;
 
   color: $primary-text;
+
   h1 {
     color: $primary-text-emphasis;
     font-family: 'Open Sans';
@@ -25,13 +26,22 @@ body {
   a,
   .link- {
     text-decoration: none;
-    color: $primary;
+    color: $secondary-lighter;
     transition: 0.4s;
   }
 
   @media (hover: hover) {
     a:hover {
-      background-color: hsla(17, 58%, 85%, 0.2);
+      background-color: hsla(43, 42%, 75%, 0.2);
+    }
+  }
+
+  .title-card {
+    h1 {
+      font-size: 96px;
+    }
+    div {
+      font-size: 24px;
     }
   }
 }
