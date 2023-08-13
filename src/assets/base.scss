@@ -5,7 +5,7 @@
 body {
   // Dark Mode
   background: url('./textured-bg-dark.png') repeat;
-  background-color: $primary;
+  background-color: $bg;
   font-family: Handlee;
 
   color: $primary-text;
@@ -20,5 +20,18 @@ body {
     font-size: 24px;
     font-style: normal;
     font-weight: 400;
+  }
+
+  a,
+  .link- {
+    text-decoration: none;
+    color: $primary;
+    transition: 0.4s;
+  }
+
+  @media (hover: hover) {
+    a:hover {
+      background-color: hsla(17, 58%, 85%, 0.2);
+    }
   }
 }

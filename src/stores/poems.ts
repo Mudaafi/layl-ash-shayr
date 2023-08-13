@@ -18,8 +18,16 @@ export interface Poem {
   headerImage?: string
 }
 
+const API_CALLS = {
+  GET: {
+    getPoemByTitle: 'poem',
+    getPoemList: 'poemsList'
+  }
+}
+
 export const usePoemsStore = defineStore('poems', () => {
   const poemStore = reactive<Poem[]>([])
+  const poemList = reactive<Array<{ poemTitle: string; poemAuthor: string }>>([])
 
   // Returns a stored that's keyed by the poem title
   const poemsByTitle = computed(() => {
@@ -33,7 +41,7 @@ export const usePoemsStore = defineStore('poems', () => {
   // fetch the poem
   async function fetchPoemByTitle(poemTitle: string) {
     const res: GSheetResponse = await (
-      await fetch(`${GSHEET_STORE}?type=poem&poemTitle=${poemTitle}`)
+      await fetch(`${GSHEET_STORE}?type=${API_CALLS.GET.getPoemByTitle}&poemTitle=${poemTitle}`)
     ).json()
     if (res.success) {
       const poem = res.body as Poem
@@ -43,5 +51,19 @@ export const usePoemsStore = defineStore('poems', () => {
     }
   }
 
-  return { poemStore, poemsByTitle, fetchPoemByTitle }
+  async function fetchPoemList() {
+    const res: GSheetResponse = await (
+      await fetch(`${GSHEET_STORE}?type=${API_CALLS.GET.getPoemList}`)
+    ).json()
+    if (res.success) {
+      const poemListRes = res.body as Array<{ poemTitle: string; poemAuthor: string }>
+      poemList.length = 0
+      poemList.push(...poemListRes)
+      return poemList
+    } else {
+      throw new Error(res.errorMsg)
+    }
+  }
+
+  return { poemStore, poemList, poemsByTitle, fetchPoemByTitle, fetchPoemList }
 })

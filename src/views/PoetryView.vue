@@ -15,7 +15,7 @@ const errorMsg = ref('')
 const poemStore = usePoemsStore()
 let poem: Poem = poemStore.poemsByTitle[props.poemTitle]
 
-if (!poem) {
+if (!poem || !poem.poem) {
   isLoading.value = true
 
   poemStore
