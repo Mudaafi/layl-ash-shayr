@@ -1,28 +1,50 @@
 #app {
-  padding: 0 8rem;
+  padding: 0;
+  margin: 0 auto;
+  font-weight: normal;
 }
 
 body {
-  // Dark Mode
-  // background: url('./textured-bg-dark.png') repeat;
+  // Typography
   background-color: $bg;
-  font-family: Handlee;
-
+  font-family: Arima;
   color: $primary-text;
+  display: flex;
 
   h1 {
-    color: $primary-text-emphasis;
+    font-size: 22px;
+    line-height: 1;
     font-family: 'Open Sans';
-    font-size: 48px;
     font-weight: 700;
+    color: $primary-text-emphasis;
+  }
+  .subheader {
+    font-size: 14px;
+    font-family: 'Open Sans';
+    font-weight: 700;
+    color: $primary-text-emphasis;
   }
   p {
-    font-family: Handlee;
-    font-size: 24px;
+    font-size: 14px;
+    font-family: 'Arima';
     font-style: normal;
-    font-weight: 400;
+  }
+  ul {
+    padding: 0 12px;
   }
 
+  @media (min-width: $desktop-width) {
+    h1 {
+      font-size: 64px;
+    }
+    .subheader,
+    p,
+    li {
+      font-size: 24px;
+    }
+  }
+
+  // Other shit idk
   a,
   .link- {
     text-decoration: none;
