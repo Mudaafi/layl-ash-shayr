@@ -4,6 +4,10 @@
   font-weight: normal;
 }
 
+.has-navbar {
+  padding-top: $nav-bar-top-padding;
+}
+
 body {
   // Typography
   background-color: $bg;

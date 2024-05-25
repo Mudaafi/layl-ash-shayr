@@ -18,8 +18,28 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
+      path: '/sessions',
+      name: 'sessions',
+      component: () => import('../views/SessionView.vue')
+    },
+    {
+      path: '/events',
+      name: 'events',
+      component: () => import('../views/EventsView.vue')
+    },
+    {
+      path: '/events',
+      name: 'events',
+      component: () => import('../views/OpenMicView.vue')
+    },
+    {
+      path: '/about-us',
+      name: 'people',
+      component: () => import('../views/PeopleView.vue')
+    },
+    {
       path: '/poetry',
-      component: () => import('../views/404View.vue')
+      component: () => import('../components/PoemsList.vue')
     },
     {
       path: '/poetry/:poemTitle',

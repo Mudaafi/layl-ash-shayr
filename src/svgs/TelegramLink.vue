@@ -3,14 +3,7 @@
 <template>
   <div class="container">
     <!-- Disabled -->
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="17"
-      height="17"
-      viewBox="0 0 17 17"
-      fill="none"
-      class="default"
-    >
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17" fill="none" class="default">
       <g clip-path="url(#clip0_10_1052)">
         <path
           d="M16.9 8.5C16.9 13.1392 13.1392 16.9 8.5 16.9C3.86081 16.9 0.1 13.1392 0.1 8.5C0.1 3.86081 3.86081 0.1 8.5 0.1C13.1392 0.1 16.9 3.86081 16.9 8.5Z"
@@ -45,17 +38,10 @@
           <rect width="17" height="17" fill="white" />
         </clipPath>
       </defs>
-    </svg>
+    </svg> -->
 
     <!-- Active -->
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="17"
-      height="17"
-      viewBox="0 0 17 17"
-      fill="none"
-      class="active"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17" fill="none" class="active">
       <g clip-path="url(#clip0_10_1052)">
         <path
           d="M8.5 17C13.1944 17 17 13.1944 17 8.5C17 3.80558 13.1944 0 8.5 0C3.80558 0 0 3.80558 0 8.5C0 13.1944 3.80558 17 8.5 17Z"
@@ -108,7 +94,7 @@
   .active {
     position: absolute;
     left: 0;
-    opacity: 0;
+    opacity: 1;
     transition: 0.2s;
   }
   .default {
@@ -120,7 +106,7 @@
       opacity: 1;
     }
     .default {
-      opacity: 0;
+      opacity: 1;
     }
   }
 }

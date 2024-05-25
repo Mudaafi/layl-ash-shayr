@@ -1,158 +1,112 @@
 <script setup lang="ts">
-import MoonAndStars from '../svgs/MoonAndStars.vue'
+import NavBar from '../components/NavBar.vue'
+const show = false
 </script>
 
 <template>
-  <main>
-    <section class="prelude">
-      <div class="header">
-        <div class="left">
-          <h2 class="subheader">HOLD UP</h2>
-          <h1>What is Layl Ash-Shayr?</h1>
+  <div class="bootstrap-home">
+    <NavBar />
+    <div class="items">
+      <TelegramLink class="soc-med" />
+
+      <img src="../assets/images/logo.png" alt="LAS logo" />
+      <h1>Welcome to LAS</h1>
+      <p>Hang tight, we're crafting an even better landing page...</p>
+    </div>
+  </div>
+
+  <div v-if="show">
+    <div class="bg-image">
+      <img src="../assets/images/paint-spill.png" alt="" />
+    </div>
+    <main class="bg">
+      <div class="poetry">
+        <div class="ink-bottle">
+          <!-- lmao can I just use one image here please -->
+          <img defer class="ink-bottle-top" src="../assets/images/ink-bottle-1.png" alt="" />
+          <img defer class="ink-bottle-darker" src="../assets/images/ink-bottle-1.png" alt="" />
+          <img defer class="ink-bottle-darker" src="../assets/images/ink-bottle-1.png" alt="" />
         </div>
-        <div class="right">
-          <MoonAndStars class="top-right-graphic" />
-        </div>
+        <div class="subtext">Poetry</div>
       </div>
 
-      <div class="content">
-        <p>
-          Layl Ash-Shayr, (loosely) translating to “Poetry Night”, is an
-          <b>open mic and spoken word event for Muslim writers in Singapore </b> to share their work
-          and engage with fellow creatives
-        </p>
-      </div>
-    </section>
-
-    <section class="concept">
-      <div class="header">
-        <h1>The Concept</h1>
-        <h2 class="subheader">IT'S SIMPLE!</h2>
-      </div>
-
-      <div class="content">
-        <div class="point">
-          <div class="point-img"><MoonAndStars /></div>
-          <div class="subheader">1 - 2 Featured Guests</div>
-          <ul>
-            <li>Hear from published Muslim authors/poets & their works</li>
-            <li>Be inspired by prominent voices within our community!</li>
-          </ul>
-        </div>
-
-        <div class="point">
-          <div class="point-img"><MoonAndStars /></div>
-          <div class="subheader">5 Open Mics</div>
-          <ul>
-            <li>Support emerging voices in the SG Muslim literary scene</li>
-            <li>Sneak peek of new, unheard & possibly unpublished work!</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="okay-but">
-      <div class="header">
-        <h2 class="subheader">OKAY, BUT</h2>
-        <h1>Why a 'Muslim' Open-Mic?</h1>
-      </div>
-
-      <div class="content">
-        <div class="point">
-          <div class="point-img"><MoonAndStars /></div>
-          <p>To nurture a <b>love for reading and writing</b> in the local Muslim Community</p>
-        </div>
-        <div class="point">
-          <div class="point-img"><MoonAndStars /></div>
-          <p>To build a <b>community of Muslim writers</b> who can support one another</p>
-        </div>
-        <div class="point">
-          <div class="point-img"><MoonAndStars /></div>
-          <p>A platform for <b>up-and-coming Muslim writers</b> to showcase their work</p>
-        </div>
-      </div>
-    </section>
-  </main>
+      <div>hello</div>
+      <div>hello</div>
+      <div>hello</div>
+      <div>hello</div>
+    </main>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-div.subheader {
-  margin-bottom: 8px;
-}
-.top-right-graphic {
-  height: 48px;
-  width: 48px;
-  margin-right: -8px;
-  @media (min-width: $desktop-width) {
-    height: 8vw;
-    width: 8vw;
-  }
-}
+.bootstrap-home {
+  min-height: 100vh;
+  min-width: 100vw;
+  background-image: url('../assets/images/stars-bg.jpeg');
+  background-size: contain;
 
-section {
-  padding: 24px;
-  @media (min-width: $desktop-width) {
-    padding: 100px;
-  }
-
-  .point-img {
-    margin-top: 48px;
-    margin-bottom: 24px;
-    @media (min-width: $desktop-width) {
-      margin-top: 140px;
-      margin-bottom: 60px;
-    }
-  }
-  .header {
-    margin-bottom: 24px;
-    @media (min-width: $desktop-width) {
-      margin-bottom: 60px;
-    }
-  }
-
-  &.prelude {
-    background-color: $bg;
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-    }
-    @media (min-width: $desktop-width) {
-      .content {
-        width: 50%;
-      }
-    }
-  }
-
-  &.concept {
+  .items {
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    text-align: center;
     align-items: center;
-    text-align: center;
-    background-color: $primary-darker;
-    .header {
-      margin-bottom: 0;
-    }
-    @media (min-width: $desktop-width) {
-      .content {
-        display: flex;
-        column-gap: 162px;
-      }
-    }
+    justify-content: center;
   }
+}
 
-  &.okay-but {
-    background-color: $secondary-darkest;
-    text-align: center;
-    .header {
-      text-align: right;
+main.bg {
+  background-color: whitesmoke;
+  color: whitesmoke;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  overflow: hidden;
+}
+
+.bg-image {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: absolute;
+  z-index: 0;
+  img {
+    // margin-top: 15vh;
+    margin-left: 7vh;
+    object-fit: cover;
+    object-position: left 50%;
+    width: 100%;
+    height: 100%;
+    right: 0;
+  }
+}
+
+.poetry {
+  color: black;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  font-size: 24px;
+
+  column-gap: 0;
+  display: block;
+  padding: 0;
+  position: relative;
+  .ink-bottle {
+    z-index: 10;
+    display: flex;
+    cursor: pointer;
+    rotate: 90deg;
+    margin-left: -5vh;
+
+    img {
+      width: 25vh;
     }
-    @media (min-width: $desktop-width) {
-      .content {
-        display: flex;
-        column-gap: 120px;
-      }
+
+    .ink-bottle-darker {
+      position: absolute;
     }
   }
 }

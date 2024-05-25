@@ -3,14 +3,7 @@
 <template>
   <div class="container">
     <!-- Disabled -->
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="34"
-      height="34"
-      viewBox="0 0 34 34"
-      fill="none"
-      class="default"
-    >
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34" fill="none" class="default">
       <g clip-path="url(#clip0_11_46)">
         <path
           d="M16.6471 0.1C25.7839 0.1 33.1942 7.66439 33.1942 17C33.1942 26.3357 25.7839 33.9001 16.6471 33.9001C7.51032 33.9001 0.1 26.3357 0.1 17C0.1 7.66439 7.51032 0.1 16.6471 0.1Z"
@@ -29,17 +22,10 @@
           <rect width="33.2941" height="34" fill="white" />
         </clipPath>
       </defs>
-    </svg>
+    </svg> -->
 
     <!-- Active -->
-    <svg
-      width="34"
-      height="34"
-      viewBox="0 0 34 34"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      class="active"
-    >
+    <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" class="active">
       <g clip-path="url(#clip0_11_46)">
         <path
           fill-rule="evenodd"
@@ -82,7 +68,7 @@
   .active {
     position: absolute;
     left: 0;
-    opacity: 0;
+    opacity: 1;
     transition: 0.2s;
   }
   .default {
@@ -94,7 +80,7 @@
       opacity: 1;
     }
     .default {
-      opacity: 0;
+      opacity: 1;
     }
   }
 }
