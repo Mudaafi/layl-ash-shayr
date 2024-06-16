@@ -3,8 +3,6 @@ import { usePoemsStore } from '@/stores/poems'
 
 const poemStore = usePoemsStore()
 poemStore.fetchPoemList()
-
-// const props = defineProps<{}>()
 </script>
 
 <template>
@@ -19,8 +17,14 @@ poemStore.fetchPoemList()
 
 <style lang="scss" scoped>
 .poem-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
   text-align: center;
+  row-gap: 8px;
   .poem {
+    font-size: 25px;
     margin-bottom: 4px;
   }
 }

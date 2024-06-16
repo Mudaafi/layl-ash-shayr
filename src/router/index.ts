@@ -48,6 +48,15 @@ const router = createRouter({
       props: true
     },
     {
+      // temporary, for demo
+      path: '/landing',
+      component: () => import('../views/LandingView.vue')
+    },
+    {
+      path: '/anthology',
+      component: () => import('../views/AnthologyView.vue')
+    },
+    {
       path: '/:catchAll(.*)',
       name: '404',
       component: () => import('../views/404View.vue')

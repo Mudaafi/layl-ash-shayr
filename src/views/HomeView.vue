@@ -4,7 +4,7 @@ const show = false
 </script>
 
 <template>
-  <div class="bootstrap-home">
+  <div class="bootstrap-home" v-if="!show">
     <NavBar />
     <div class="items">
       <TelegramLink class="soc-med" />

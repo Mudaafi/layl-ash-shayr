@@ -55,6 +55,11 @@ if (!poem || !poem.poem) {
 }
 .main {
   // min-width: 75vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   .poem-title {
     display: flex;
     justify-content: space-between;
