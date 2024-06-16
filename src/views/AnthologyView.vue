@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
-const launchTime = 1717851600000
-// const launchTime = 0
+const launchTime = 1720850400000
 const timeLeft = ref(launchTime - Date.now())
 
 function parseTimeLeft(timeLeft: number) {
