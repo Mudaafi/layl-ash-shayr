@@ -82,36 +82,47 @@ function isVolunteers() {
       @scroll="onScroll"
       @scroll-debounce="onScrollEnd"
     >
-      <div
-        class="slide committee-member"
-        v-for="member in committee"
-        :id="member.alias"
-        :key="member.alias"
-      >
-        <div class="left-spacer"></div>
+      <div class="slide" v-for="member in committee" :id="member.alias" :key="member.alias">
         <div class="img-container">
-          <img :src="convertDriveImgToLinkable(member.imageLink)" alt="picture of a comm member" />
+          <img
+            :data-person="member.alias"
+            :src="convertDriveImgToLinkable(member.imageLink)"
+            alt="picture of a comm member"
+          />
         </div>
-        <div class="right-spacer"></div>
       </div>
     </vue-horizontal>
   </div>
 
   <main class="people-view">
     <section v-if="isCommittee() && committee.length > 0" class="committee">
+      <div class="left-curtain curtain"></div>
+      <div class="right-curtain curtain"></div>
       <div class="committee-member">
-        <div class="left fadeable" :class="isScrolling && 'faded'">
-          <h1 class="name">{{ committee[index]?.alias }}</h1>
-          <div class="info-group">
-            <div class="info">{{ committee[index]?.name }}</div>
-            <div class="info">{{ committee[index]?.role }}</div>
+        <div class="grid-info">
+          <div class="left fadeable" :class="isScrolling && 'faded'">
+            <h1 class="name">{{ committee[index]?.alias }}</h1>
+            <div class="info-group">
+              <div class="info">{{ committee[index]?.name }}</div>
+              <div class="info">{{ committee[index]?.role }}</div>
+            </div>
+          </div>
+
+          <div class="img-spacer">
+            <!-- <img
+            class="pfp-image"
+            :src="convertDriveImgToLinkable(volunteer.imageLink)"
+            alt="Picture of volunteer"
+          /> -->
+          </div>
+
+          <div class="right fadeable" :class="isScrolling && 'faded'">
+            <h3>Excerpt</h3>
+            <div class="excerpt">{{ committee[index]?.quote }}</div>
           </div>
         </div>
-        <div class="img-spacer">
-          <!-- <img crossorigin="anonymous" :src="committee[index].imageSrc" alt="picture of a person" /> -->
-        </div>
-        <div class="right fadeable" :class="isScrolling && 'faded'">
-          <h3>Life Excerpt</h3>
+        <div class="bottom fadeable is-mobile" :class="isScrolling && 'faded'">
+          <h3>Excerpt</h3>
           <div class="excerpt">{{ committee[index]?.quote }}</div>
         </div>
       </div>
@@ -146,6 +157,10 @@ function isVolunteers() {
 
 <style scoped lang="scss">
 $sub-header-height: 40px;
+
+.is-mobile {
+  display: none !important;
+}
 
 .fadeable {
   transition: opacity 0.35s ease-out;
@@ -183,55 +198,109 @@ $sub-header-height: 40px;
   }
 }
 
-.committee-member {
-  display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
-  flex-direction: row;
-  column-gap: 40px;
-  padding: 40px;
-  padding-top: 0;
-  padding-bottom: 0;
+.committee {
+  .curtain {
+    position: absolute;
+    z-index: 5;
+    width: 30vw;
+    height: calc(100vh - $sub-header-height - 0px);
+    pointer-events: none;
+    &.left-curtain {
+      left: 0;
 
-  .left,
-  .left-spacer {
-    text-align: left;
-    padding-top: 40px;
-    padding-right: 0;
-
-    .name {
-      color: $secondary;
-      font-family: Arima;
-      font-size: 10vw;
-      letter-spacing: 4px;
-      margin-bottom: 20px;
+      background: linear-gradient(
+        90deg,
+        rgba(27, 27, 27, 1) 0%,
+        rgba(27, 27, 27, 1) 10%,
+        rgba(27, 27, 27, 0) 100%
+      );
     }
-
-    .info {
-      margin-bottom: 8px;
-      font-size: 1.25vw;
+    &.right-curtain {
+      right: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(27, 27, 27, 0) 0%,
+        rgba(27, 27, 27, 1) 90%,
+        rgba(27, 27, 27, 1) 100%
+      );
     }
   }
 
-  .img-container,
-  .img-spacer {
+  .committee-member {
+    padding: 40px;
+    padding-top: 0;
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100vh - $sub-header-height - 0px);
+
+    .grid-info {
+      display: grid;
+      grid-template-columns: 1fr 3fr 1fr;
+      flex-direction: row;
+      column-gap: 40px;
+      .left {
+        text-align: left;
+        padding-top: 40px;
+        padding-right: 0;
+        z-index: 10;
+
+        .name {
+          color: $secondary;
+          font-family: Arima;
+          font-size: 10vw;
+          letter-spacing: 4px;
+          margin-bottom: 20px;
+        }
+
+        .info {
+          margin-bottom: 8px;
+          font-size: 2vw;
+        }
+      }
+
+      .right {
+        padding-top: 40px;
+        text-align: left;
+        z-index: 10;
+        h3 {
+          font-weight: 700;
+          font-size: 1.25vw;
+          margin-bottom: 20px;
+        }
+      }
+    }
+
+    .bottom {
+      display: flex;
+      position: relative;
+      flex-direction: column;
+      text-align: left;
+      z-index: 10;
+      margin-bottom: 10px;
+      background: rgb(1, 1, 1, 0.15);
+
+      h3 {
+        font-weight: 700;
+        font-size: 4vw;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+.img-container,
+.img-spacer {
+  width: 100%;
+  height: calc(100vh - $sub-header-height - 0px);
+  img {
     width: 100%;
-    height: calc(100vh - $sub-header-height - 8px);
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: 50% top;
-    }
-  }
-
-  .right,
-  .right-spacer {
-    padding-top: 40px;
-    text-align: left;
-    h3 {
-      font-weight: 700;
-      font-size: 1.25vw;
-      margin-bottom: 20px;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% top;
+    &[data-person='thas'] {
+      object-position: 30% top;
     }
   }
 }
@@ -286,6 +355,52 @@ $sub-header-height: 40px;
         text-decoration: it;
       }
     }
+  }
+}
+
+// -- MOBILE Overrides
+
+@media (max-width: 1024px) {
+  .is-mobile {
+    display: flex !important;
+  }
+  .committee {
+    .committee-member {
+      padding: 0 14px;
+      .grid-info {
+        .left {
+          padding-top: 20px;
+          .name {
+            font-size: 10vw;
+            margin-bottom: 10px;
+          }
+          .info {
+            margin-bottom: 0px;
+            font-size: 2.75vw;
+          }
+        }
+      }
+
+      .right,
+      .img-spacer {
+        display: none;
+      }
+    }
+  }
+}
+</style>
+
+<style>
+.v-hl-btn {
+  z-index: 10 !important;
+}
+
+@media (max-width: 1024px) {
+  .v-hl-btn .v-hl-svg {
+    width: 20px !important;
+    height: 20px !important;
+    margin: 2px !important;
+    padding: 0 !important;
   }
 }
 </style>
