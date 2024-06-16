@@ -1,26 +1,18 @@
 <script setup lang="ts">
-import { convertDriveImgToLinkable } from '@/utils'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import VueHorizontal from 'vue-horizontal'
+import { convertDriveImgToLinkable } from '@/utils'
+import { usePeopleStore, type Department } from '@/stores/config'
+
+const peopleStore = usePeopleStore()
+peopleStore.fetchCommittee()
+peopleStore.fetchVolunteers()
+
+const committee = computed(() => peopleStore.committeeStore)
+const volunteers = computed(() => peopleStore.volunteerStore)
 
 type PeopleGroup = 'committee' | 'volunteers' | 'poets' | 'everyone'
 const subheaders: Array<PeopleGroup> = ['committee', 'volunteers', 'poets', 'everyone']
-
-interface Committee {
-  alias: string
-  name: string
-  role: string
-  pfpLink: string
-  excerpt: string
-}
-
-type Department = 'marketing' | 'admin' | 'outreach' | 'tech'
-interface Volunteer {
-  name: string
-  bios: string
-  pfp: string
-  department: Department
-}
 
 function getDeptColor(dept: string | Department) {
   console.log(dept)
@@ -38,120 +30,6 @@ function getDeptColor(dept: string | Department) {
   }
 }
 
-const committee = [
-  {
-    left: {
-      alias: 'lails',
-      name: `Laili`,
-      role: 'The Outreach Head',
-      birthday: '???'
-    },
-    imageSrc: 'https://drive.google.com/file/d/1cJBZVgiAEhSkQMTfqFaeXrskeBDLj6mL/view?usp=sharing',
-    right: {
-      excerpt: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, velit nesciunt. Officiis
-          saepe excepturi provident, blanditiis commodi nisi distinctio, quod aspernatur voluptate
-          soluta ullam? Cumque omnis incidunt fugit facilis, ab nulla modi eius qui nihil, et animi
-          ipsum, facere consequatur libero quae laudantium impedit totam distinctio porro deserunt
-          voluptate architecto.`
-    }
-  },
-  {
-    left: {
-      alias: 'zubs',
-      name: `Zubaidah Dadlani`,
-      role: 'The Marketing Head',
-      birthday: '???'
-    },
-    imageSrc:
-      'https://drive.google.com/file/d/1p-ekiTD7RChF28uaHzAytc9IIixgFG6M/view?usp=drive_link',
-    right: {
-      excerpt: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, velit nesciunt. Officiis
-          saepe excepturi provident, blanditiis commodi nisi distinctio, quod aspernatur voluptate
-          soluta ullam? Cumque omnis incidunt fugit facilis, ab nulla modi eius qui nihil, et animi
-          ipsum, facere consequatur libero quae laudantium impedit totam distinctio porro deserunt
-          voluptate architecto.`
-    }
-  },
-  {
-    left: {
-      alias: 'sarah',
-      name: `Sarah`,
-      role: 'The Admin Head',
-      birthday: '???'
-    },
-    imageSrc:
-      'https://drive.google.com/file/d/1Kbn-8rpYz893a7W9jcFuEwIqhgyc5Yth/view?usp=drive_link',
-    right: {
-      excerpt: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, velit nesciunt. Officiis
-          saepe excepturi provident, blanditiis commodi nisi distinctio, quod aspernatur voluptate
-          soluta ullam? Cumque omnis incidunt fugit facilis, ab nulla modi eius qui nihil, et animi
-          ipsum, facere consequatur libero quae laudantium impedit totam distinctio porro deserunt
-          voluptate architecto.`
-    }
-  },
-  {
-    left: {
-      alias: 'thas',
-      name: `Thasneem`,
-      role: 'Photographer',
-      birthday: '???'
-    },
-    imageSrc:
-      'https://drive.google.com/file/d/1ILnysEylHmnt8MBNCb715N_9hTfEi-1D/view?usp=drive_link',
-    right: {
-      excerpt: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, velit nesciunt. Officiis
-          saepe excepturi provident, blanditiis commodi nisi distinctio, quod aspernatur voluptate
-          soluta ullam? Cumque omnis incidunt fugit facilis, ab nulla modi eius qui nihil, et animi
-          ipsum, facere consequatur libero quae laudantium impedit totam distinctio porro deserunt
-          voluptate architecto.`
-    }
-  },
-  {
-    left: {
-      alias: 'aafi',
-      name: `Ahmad Mudaafi'`,
-      role: 'Tech Dude',
-      birthday: '19 Sep 1997'
-    },
-    imageSrc:
-      'https://drive.google.com/file/d/1aGzcBNnPJ1XJBvKP6JyGHB9yR4N7zqpZ/view?usp=drive_link',
-    right: {
-      excerpt: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, velit nesciunt. Officiis
-          saepe excepturi provident, blanditiis commodi nisi distinctio, quod aspernatur voluptate
-          soluta ullam? Cumque omnis incidunt fugit facilis, ab nulla modi eius qui nihil, et animi
-          ipsum, facere consequatur libero quae laudantium impedit totam distinctio porro deserunt
-          voluptate architecto.`
-    }
-  }
-]
-
-const volunteers: Array<Volunteer> = [
-  {
-    department: 'admin',
-    pfp: 'https://drive.google.com/file/d/1l3s3DQ56Anb8XdxYwwWNQJExv_j-uB6o/view?usp=drive_link',
-    name: 'Alyeesha ‘Kaif’',
-    bios: '“This dunia is definitely a test because why else would there be snails.”'
-  },
-  {
-    department: 'admin',
-    pfp: 'https://drive.google.com/file/d/1XzUZ9mI8hFZU270lxcnKNq0SRAiUETWj/view?usp=drive_link',
-    name: 'batrisyia',
-    bios: "nothing like the rain when you're in outer space"
-  },
-  {
-    department: 'admin',
-    pfp: 'https://drive.google.com/file/d/1Qxa7DWgGkEnaHwwdMQD6_jJBJpxgBnmq/view?usp=drive_link',
-    name: 'Rashidah',
-    bios: '(81:26) So where are you going?'
-  },
-  {
-    department: 'marketing',
-    pfp: 'https://drive.google.com/file/d/18BLbewSEOtBqCiQEzHH1QEZ9hFwRUD6F/view?usp=drive_link',
-    name: 'Amsyar',
-    bios: "What's another way to say this 'grinds my gears': 'unlikes my ig post', 'never showerers in my bus'"
-  }
-]
-
 const currSelection = ref<PeopleGroup>('committee')
 function onPeopleGroupSelect(val: PeopleGroup) {
   currSelection.value = val
@@ -165,8 +43,10 @@ function onScroll() {
 const index = ref(0)
 function onScrollEnd(e: any) {
   const newIndex = Math.floor(e.left / e.width)
-  index.value = newIndex
-  isScrolling.value = false
+  if (!Number.isNaN(newIndex)) {
+    index.value = newIndex
+    isScrolling.value = false
+  }
 }
 function onPrev() {
   index.value -= 1
@@ -174,6 +54,10 @@ function onPrev() {
 
 function isCommittee() {
   return currSelection.value === 'committee'
+}
+
+function isVolunteers() {
+  return currSelection.value === 'volunteers'
 }
 </script>
 
@@ -190,7 +74,7 @@ function isCommittee() {
     </a>
   </div>
 
-  <div v-if="isCommittee()" class="scroller">
+  <div v-if="isCommittee() && committee.length > 0" class="scroller">
     <vue-horizontal
       :displacement="0.9"
       :button-between="false"
@@ -201,12 +85,12 @@ function isCommittee() {
       <div
         class="slide committee-member"
         v-for="member in committee"
-        :id="member.left.alias"
-        :key="member.left.alias"
+        :id="member.alias"
+        :key="member.alias"
       >
         <div class="left-spacer"></div>
         <div class="img-container">
-          <img :src="convertDriveImgToLinkable(member.imageSrc)" alt="picture of a comm member" />
+          <img :src="convertDriveImgToLinkable(member.imageLink)" alt="picture of a comm member" />
         </div>
         <div class="right-spacer"></div>
       </div>
@@ -214,14 +98,13 @@ function isCommittee() {
   </div>
 
   <main class="people-view">
-    <section v-if="isCommittee()" class="committee">
+    <section v-if="isCommittee() && committee.length > 0" class="committee">
       <div class="committee-member">
         <div class="left fadeable" :class="isScrolling && 'faded'">
-          <h1 class="name">{{ committee[index].left.alias }}</h1>
+          <h1 class="name">{{ committee[index]?.alias }}</h1>
           <div class="info-group">
-            <div class="info">{{ committee[index].left.name }}</div>
-            <div class="info">{{ committee[index].left.role }}</div>
-            <div class="info">{{ committee[index].left.birthday }}</div>
+            <div class="info">{{ committee[index]?.name }}</div>
+            <div class="info">{{ committee[index]?.role }}</div>
           </div>
         </div>
         <div class="img-spacer">
@@ -229,18 +112,18 @@ function isCommittee() {
         </div>
         <div class="right fadeable" :class="isScrolling && 'faded'">
           <h3>Life Excerpt</h3>
-          <div class="excerpt">{{ committee[index].right.excerpt }}</div>
+          <div class="excerpt">{{ committee[index]?.quote }}</div>
         </div>
       </div>
     </section>
 
-    <section v-if="currSelection === 'volunteers'" class="volunteers">
+    <section v-if="isVolunteers()" class="volunteers">
       <div class="member" v-for="volunteer in volunteers" :key="volunteer.name">
         <div class="left">
           <div class="pfp" :style="{ boxShadow: `4px 4px ${getDeptColor(volunteer.department)}` }">
             <img
               class="pfp-image"
-              :src="convertDriveImgToLinkable(volunteer.pfp)"
+              :src="convertDriveImgToLinkable(volunteer.imageLink)"
               alt="Picture of volunteer"
             />
           </div>
@@ -249,7 +132,7 @@ function isCommittee() {
           <div class="vol-name">{{ volunteer.name }}</div>
           <div class="vol-dept">{{ volunteer.department }}</div>
           <div class="vol-bio">
-            <i>{{ volunteer.bios }}</i>
+            <i>{{ volunteer.quote }}</i>
           </div>
         </div>
       </div>
