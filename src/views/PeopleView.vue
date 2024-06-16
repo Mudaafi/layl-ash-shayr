@@ -10,6 +10,7 @@ peopleStore.fetchVolunteers()
 
 const committee = computed(() => peopleStore.committeeStore)
 const volunteers = computed(() => peopleStore.volunteerStore)
+const sliderRef = ref<any>()
 
 type PeopleGroup = 'committee' | 'volunteers' | 'poets' | 'everyone'
 const subheaders: Array<PeopleGroup> = ['committee', 'volunteers', 'poets', 'everyone']
@@ -59,6 +60,12 @@ function isCommittee() {
 function isVolunteers() {
   return currSelection.value === 'volunteers'
 }
+
+function workaroundToGetNavButtons() {
+  if (sliderRef?.value) {
+    sliderRef.value.refresh()
+  }
+}
 </script>
 
 <template>
@@ -74,19 +81,23 @@ function isVolunteers() {
     </a>
   </div>
 
-  <div v-if="isCommittee() && committee.length > 0" class="scroller">
+  <div v-if="isCommittee()" class="scroller">
     <vue-horizontal
       :displacement="0.9"
       :button-between="false"
       @onPrev="onPrev"
       @scroll="onScroll"
       @scroll-debounce="onScrollEnd"
+      ref="sliderRef"
+      v-if="committee.length > 0"
     >
       <div class="slide" v-for="member in committee" :id="member.alias" :key="member.alias">
         <div class="img-container">
           <img
             :data-person="member.alias"
             :src="convertDriveImgToLinkable(member.imageLink)"
+            :onload="workaroundToGetNavButtons"
+            @click="workaroundToGetNavButtons"
             alt="picture of a comm member"
           />
         </div>
