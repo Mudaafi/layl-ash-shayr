@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import SecretBook from '../svgs/SecretBook.vue'
+import { useAuthStore } from '@/stores/auth'
 
+const authStore = useAuthStore()
 const launchTime = 1720850400000
 const timeLeft = ref(launchTime - Date.now())
 
@@ -26,10 +29,21 @@ setInterval(() => {
   const timeNow = Date.now()
   timeLeft.value = launchTime - timeNow
 }, 1000)
+
+function login() {
+  const magicWord = window.prompt('Recite the magic word', '')
+  if (magicWord) {
+    authStore.setPassword(magicWord)
+  }
+}
 </script>
 
 <template>
-  <div class="countdown" v-if="!hasLaunched">
+  <div class="login-header">
+    <div></div>
+    <button @click="login"><SecretBook class="icon" /></button>
+  </div>
+  <div class="countdown" v-if="!hasLaunched && !authStore.isAdmin">
     <div class="title">Layl Ash-Shayr Vol 1</div>
     <div class="clock">
       {{ timeObj.days }}d {{ timeObj.hours }}h {{ timeObj.minutes }}m {{ timeObj.seconds }}s
@@ -46,6 +60,33 @@ setInterval(() => {
 </template>
 
 <style lang="scss" scoped>
+.login-header {
+  display: flex;
+  position: absolute;
+  top: 0;
+  padding: 14px;
+  left: 0;
+  width: 100%;
+
+  justify-content: space-between;
+
+  button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    .icon {
+      width: 32px;
+      margin: 0;
+      fill: #fff;
+      transition: fill 0.175s ease-in;
+      &:hover {
+        fill: $secondary;
+      }
+    }
+  }
+}
+
 .countdown {
   display: flex;
   flex-direction: column;

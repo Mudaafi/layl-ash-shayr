@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,6 +55,7 @@ const router = createRouter({
     },
     {
       path: '/anthology',
+      name: 'anthology',
       component: () => import('../views/AnthologyView.vue')
     },
     {
@@ -62,6 +64,13 @@ const router = createRouter({
       component: () => import('../views/404View.vue')
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  if (to.name !== 'anthology' && !authStore.isAdmin) {
+    next({ name: 'anthology' })
+  } else next()
 })
 
 export default router
