@@ -10,9 +10,10 @@ import TelegramLink from '../svgs/TelegramLink.vue'
     </div>
 
     <div class="center">
-      <RouterLink to="/about-us">About</RouterLink>
-      <RouterLink to="/events">Events</RouterLink>
+      <RouterLink to="/about">About</RouterLink>
+      <RouterLink to="/people">People</RouterLink>
       <RouterLink to="/poetry">Poetry</RouterLink>
+      <RouterLink to="/anthology">Anthology</RouterLink>
     </div>
 
     <div class="right">

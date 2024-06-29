@@ -16,25 +16,25 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+      component: () => import('../views/OpenMicView.vue')
     },
     {
       path: '/sessions',
       name: 'sessions',
       component: () => import('../views/SessionView.vue')
     },
+    // {
+    //   path: '/events',
+    //   name: 'events',
+    //   component: () => import('../views/EventsView.vue')
+    // },
+    // {
+    //   path: '/events',
+    //   name: 'events',
+    //   component: () => import('../views/OpenMicView.vue')
+    // },
     {
-      path: '/events',
-      name: 'events',
-      component: () => import('../views/EventsView.vue')
-    },
-    {
-      path: '/events',
-      name: 'events',
-      component: () => import('../views/OpenMicView.vue')
-    },
-    {
-      path: '/about-us',
+      path: '/people',
       name: 'people',
       component: () => import('../views/PeopleView.vue')
     },
