@@ -60,7 +60,7 @@ setInterval(() => {
 
   .clock {
     color: white;
-    font-size: 11vw;
+    font-size: 10vw;
     font-family: 'Orbitron';
     font-weight: 500;
 

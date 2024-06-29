@@ -11,26 +11,26 @@
 body {
   // Typography
   background-color: $bg;
-  font-family: Arima;
+  font-family: Volkorn;
   color: $primary-text;
   display: flex;
 
   h1 {
     font-size: 22px;
     line-height: 1;
-    font-family: 'Open Sans';
+    font-family: 'Volkorn';
     font-weight: 700;
     color: $primary-text-emphasis;
   }
   .subheader {
     font-size: 14px;
-    font-family: 'Open Sans';
+    font-family: 'PT Sans';
     font-weight: 700;
     color: $primary-text-emphasis;
   }
   p {
     font-size: 14px;
-    font-family: 'Arima';
+    font-family: 'Volkorn';
     font-style: normal;
   }
   ul {
