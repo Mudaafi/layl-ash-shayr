@@ -131,7 +131,12 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
         {{ selectedSession?.sessionTitle || selectedSession?.sessionType }}
         <span class="session-number">#{{ selectedSessionId }}</span>
       </div>
-      <div class="session-featured">ft. {{ selectedSession?.featuredSpeakers.join(' & ') }}</div>
+      <div
+        class="session-featured"
+        v-if="selectedSession?.featuredSpeakers && selectedSession?.featuredSpeakers.length > 0"
+      >
+        ft. {{ selectedSession?.featuredSpeakers.join(' & ') }}
+      </div>
       <div class="session-date">
         - {{ selectedSession?.date.toLocaleString('default', { month: 'short', year: 'numeric' }) }}
       </div>
