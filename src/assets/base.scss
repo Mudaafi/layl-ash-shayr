@@ -29,12 +29,13 @@ body {
     color: $primary-text-emphasis;
   }
   p {
-    font-size: 14px;
+    font-size: 16px;
     font-family: 'Volkorn';
     font-style: normal;
   }
   ul {
     padding: 0 12px;
+    font-size: 16px;
   }
 
   @media (min-width: $desktop-width) {

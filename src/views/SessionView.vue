@@ -1,15 +1,63 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { usePeopleStore } from '@/stores/people'
+import { useSessionsStore } from '@/stores/sessions'
+import { computed, ref } from 'vue'
+import { convertDriveImgToLinkable } from '@/utils'
 
-const yes = ref(false)
+const { fetchPoets, getPoetByName } = usePeopleStore()
+const { fetchSessions, getSessionsById, getSessionsByYear, getSessionConstellation } =
+  useSessionsStore()
 
-onMounted(() => {
-  setTimeout(() => {
-    yes.value = true
-  }, 2000)
-})
+const props = defineProps<{
+  year: string
+}>()
 
-window.addEventListener('mousemove', (e) => {
+const fixed = ref(false)
+const selectedSessionId = ref(-1)
+const sessionsForTheYear = computed(() => getSessionsByYear(parseInt(props.year)))
+const selectedSession = computed(() => getSessionsById(selectedSessionId.value))
+const selectedConstellation = computed(() => getSessionConstellation(parseInt(props.year)))
+
+function setFixed(bool: boolean) {
+  fixed.value = bool
+}
+
+function onStarClick(e: MouseEvent, sessionId: number) {
+  const constellationContainer = document.getElementById('constellation-container')
+  const constellationBg = document.getElementById('constellation')
+  if (!constellationContainer) {
+    console.warn('Constellation Container not found')
+    return
+  }
+
+  const windowWidth = window.innerWidth
+  const windowHeight = window.innerHeight
+
+  if (!fixed.value) {
+    selectedSessionId.value = sessionId
+
+    const mouseX = e.clientX
+    const mouseY = e.clientY
+
+    const deltaX = windowWidth / 2 - mouseX
+    const deltaY = windowHeight / 2 - mouseY
+
+    const postZoomDeltaY = -windowHeight * 0.3
+
+    constellationContainer.style.transform = `translateY(${postZoomDeltaY}px) scale(3) translate(${deltaX}px, ${deltaY}px)`
+    constellationBg!.style.opacity = '0.1'
+  } else {
+    selectedSessionId.value = -1
+
+    constellationContainer.style.transform = `scale(1)`
+    constellationBg!.style.opacity = ''
+  }
+
+  setFixed(!fixed.value)
+}
+
+function onMouseMove(e: MouseEvent) {
+  if (fixed.value) return
   const { clientX: x, clientY: y } = e
   const windowWidth = window.innerWidth
   const windowHeight = window.innerHeight
@@ -18,31 +66,101 @@ window.addEventListener('mousemove', (e) => {
   const posX = Math.floor((x * 100) / windowWidth)
   const posY = Math.floor((y * 100) / windowHeight)
   if (!bg) return
-  const a = bg.animate(
+  bg.animate(
     {
       'background-position': `${posX}% ${posY}%`,
       backgroundPositionX: `${posX}%`,
       backgroundPositionY: `${posY}%`
-      // translateX: posX
     },
     { duration: 40000, fill: 'forwards' }
   )
+}
 
-  a.onfinish = () => console.log('hi')
+function logMouseClick(e: MouseEvent) {
+  const containerHeight = window.innerHeight / 2
+  const containerWidth = containerHeight
 
-  // bg.style.backgroundPosition = `${posX}% ${posY}%`
-  // bg.style.rotate = `${posX}deg}`
-  // bg.style.backgroundPosition = '100% 100%'
+  const mouseX = e.offsetX
+  const mouseY = e.offsetY
+  const posX = Math.floor((mouseX * 100) / containerWidth)
+  const posY = Math.floor((mouseY * 100) / containerHeight)
 
-  console.log(`${posX} ${posY}`)
-})
+  console.log(`clicked x:${posX - 4}% y:${posY - 5}%`)
+}
+
+// Executions
+fetchSessions()
+fetchPoets()
+
+window.addEventListener('mousemove', onMouseMove)
+
+const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
 </script>
 
 <template>
   <div class="space-bg"></div>
 
-  <div class="constellation-container">
-    <img class="constellation" src="../assets/images/constellation-quill.png" alt="" />
+  <div class="content-container" @click="logMouseClick">
+    <div class="constellation-container" id="constellation-container">
+      <img
+        class="constellation"
+        id="constellation"
+        :src="selectedConstellation"
+        alt="constellation-pics"
+      />
+      <div class="stars-container">
+        <img
+          v-for="session in sessionsForTheYear"
+          :key="new Date(session.date).toISOString()"
+          class="star"
+          :class="selectedSessionId !== -1 && selectedSessionId !== session.id && 'not-selected'"
+          src="../assets/images/star-candidate-1.png"
+          @click="(e) => onStarClick(e, session.id)"
+          alt="session-icon"
+          :style="{
+            color: 'red',
+            top: `${!isMobileWidth ? session.y_pos : session.y_pos - 5}%`,
+            left: `${!isMobileWidth ? session.x_pos : session.x_pos - 5}%`
+          }"
+        />
+      </div>
+    </div>
+
+    <div class="info" :class="selectedSessionId !== -1 && 'active'">
+      <div class="session-title">
+        {{ selectedSession?.sessionTitle || selectedSession?.sessionType }}
+        <span class="session-number">#{{ selectedSessionId }}</span>
+      </div>
+      <div class="session-featured">ft. {{ selectedSession?.featuredSpeakers.join(' & ') }}</div>
+      <div class="session-date">
+        - {{ selectedSession?.date.toLocaleString('default', { month: 'short', year: 'numeric' }) }}
+      </div>
+
+      <section class="featured">
+        <div
+          class="featured-speaker"
+          v-for="speaker in selectedSession?.featuredSpeakers"
+          :key="speaker"
+        >
+          <div class="pfp">
+            <img :src="convertDriveImgToLinkable(getPoetByName(speaker)?.imageLink || '')" alt="" />
+          </div>
+          <div class="bio">
+            {{ getPoetByName(speaker)?.quote }}
+          </div>
+        </div>
+      </section>
+      <section class="open-mics">
+        <div class="container">
+          <h2>Open Mic Lineup</h2>
+          <ul class="open-mics-list">
+            <li class="poet" v-for="openMicers in selectedSession?.poets" :key="openMicers">
+              {{ openMicers }}
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -54,27 +172,226 @@ window.addEventListener('mousemove', (e) => {
   width: 100vw;
   height: 100vh;
   background: url('../assets/images/constellation-bg.png') no-repeat center center fixed;
-  -webkit-background-size: 120%;
-  -moz-background-size: 120%;
-  -o-background-size: 120%;
-  background-size: 150%;
+  -webkit-background-size: 150%;
+  -moz-background-size: 150%;
+  -o-background-size: 150%;
   background-position: 50% 50%;
   overflow: hidden;
-
-  // background-color: red;
 }
 
-.constellation-container {
-  display: flex;
-  position: absolute;
-  left: 50%;
-  right: 50%;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-  .constellation {
-    opacity: 65%;
-    height: 50vh;
+.content-container {
+  min-height: 100vh;
+  max-height: 100vh;
+  max-width: 100vw;
+  min-width: 100vw;
+  overflow: hidden;
+  overflow-y: scroll;
+
+  position: relative;
+  .constellation-container {
+    $constellation-height: 50vh;
+    transition: transform 0.55s cubic-bezier(0.56, 0.08, 0.38, 1.01);
+    display: flex;
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    .constellation {
+      opacity: 65%;
+      height: $constellation-height;
+      position: absolute;
+      transition: opacity 0.25s ease;
+    }
+
+    .stars-container {
+      min-width: $constellation-height;
+      min-height: $constellation-height;
+      width: $constellation-height;
+      height: $constellation-height;
+      max-width: $constellation-height;
+      max-height: $constellation-height;
+      position: relative;
+    }
+    .star {
+      width: 70px;
+      aspect-ratio: 1;
+      z-index: 3;
+      cursor: pointer;
+      position: absolute;
+
+      &.not-selected {
+        opacity: 25%;
+      }
+
+      &.selected {
+      }
+      &.completed {
+      }
+      &.upcoming {
+        opacity: 75%;
+      }
+      &.next {
+        animation: pulse 0.25s linear infinite;
+      }
+
+      @keyframes starActive {
+        0% {
+          transform: rotate(0);
+        }
+
+        50% {
+          transform: rotate(0);
+        }
+        51% {
+          transform: rotate(45deg);
+        }
+        100% {
+          transform: rotate(45deg);
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        90% {
+          transform: scale(0.75);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+    }
+  }
+
+  .info {
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 35%;
+    opacity: 0;
+    display: none;
+    font-size: 16px;
+
+    &.active {
+      animation: infoActive 1s ease-in forwards;
+      display: block;
+      opacity: 1;
+      // transition: opacity 1s ease-in;
+    }
+
+    @keyframes infoActive {
+      0% {
+        display: block;
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+        display: block;
+      }
+    }
+
+    .session-title {
+      font-size: 64px;
+      font-weight: 600px;
+      font-family: 'Pinyon Script', cursive;
+      line-height: 60px;
+    }
+
+    .session-featured {
+      font-style: italic;
+    }
+
+    .session-date {
+      margin-bottom: 20px;
+    }
+
+    .featured {
+      display: flex;
+      flex-direction: column;
+      row-gap: 20px;
+      margin-bottom: 20px;
+
+      .featured-speaker {
+        display: grid;
+        grid-template-columns: 1fr 4fr;
+        column-gap: 14px;
+        .pfp {
+          display: block;
+          width: 150px;
+          aspect-ratio: 1;
+          overflow: hidden;
+          img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 50% top;
+          }
+        }
+        .bio {
+          text-align: left;
+        }
+      }
+    }
+
+    .open-mics {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: left;
+
+      .container {
+        width: 12vw;
+
+        h2 {
+          text-decoration: underline 1px;
+        }
+
+        .open-mics-list {
+          .poet {
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// -- MOBILE Overrides
+
+@media (max-width: 1024px) {
+  .is-mobile {
+    display: flex !important;
+  }
+
+  .content-container .info {
+    top: 35%;
+    .featured {
+      .featured-speaker {
+        display: grid;
+        grid-template-columns: 1fr;
+        row-gap: 18px;
+
+        .pfp {
+          width: 75vw;
+        }
+      }
+    }
+
+    .open-mics {
+      justify-content: center;
+      text-align: center;
+      .container {
+        width: 50vw;
+        text-align: left;
+      }
+    }
   }
 }
 </style>

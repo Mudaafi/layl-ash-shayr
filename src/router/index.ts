@@ -23,6 +23,12 @@ const router = createRouter({
       name: 'sessions',
       component: () => import('../views/SessionView.vue')
     },
+    {
+      path: '/sessions/:year',
+      name: 'sessions',
+      component: () => import('../views/SessionView.vue'),
+      props: true
+    },
     // {
     //   path: '/events',
     //   name: 'events',

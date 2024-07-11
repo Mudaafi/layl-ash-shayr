@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import VueHorizontal from 'vue-horizontal'
 import { convertDriveImgToLinkable } from '@/utils'
-import { usePeopleStore, type Department } from '@/stores/config'
+import { usePeopleStore, type Department } from '@/stores/people'
 
 const peopleStore = usePeopleStore()
 peopleStore.fetchCommittee()
@@ -97,6 +97,7 @@ function workaroundToGetNavButtons() {
             :data-person="member.alias"
             :src="convertDriveImgToLinkable(member.imageLink)"
             :onload="workaroundToGetNavButtons"
+            :onerror="(el: HTMLImageElement) => console.log(el)"
             @click="workaroundToGetNavButtons"
             alt="picture of a comm member"
           />
@@ -128,12 +129,10 @@ function workaroundToGetNavButtons() {
           </div>
 
           <div class="right fadeable" :class="isScrolling && 'faded'">
-            <h3>Excerpt</h3>
             <div class="excerpt">{{ committee[index]?.quote }}</div>
           </div>
         </div>
         <div class="bottom fadeable is-mobile" :class="isScrolling && 'faded'">
-          <h3>Excerpt</h3>
           <div class="excerpt">{{ committee[index]?.quote }}</div>
         </div>
       </div>
@@ -259,9 +258,7 @@ $sub-header-height: 40px;
 
         .name {
           color: $secondary;
-          font-family: Arima;
           font-size: 10vw;
-          letter-spacing: 4px;
           margin-bottom: 20px;
         }
 
@@ -279,6 +276,9 @@ $sub-header-height: 40px;
           font-weight: 700;
           font-size: 1.25vw;
           margin-bottom: 20px;
+        }
+        .excerpt {
+          font-size: 16px;
         }
       }
     }
