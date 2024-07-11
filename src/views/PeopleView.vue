@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import VueHorizontal from 'vue-horizontal'
+import InstagramLink from '@/svgs/InstagramLink.vue'
+import EmailLink from '@/svgs/EmailLink.vue'
 import { convertDriveImgToLinkable } from '@/utils'
 import { usePeopleStore, type Department } from '@/stores/people'
 
@@ -154,6 +156,25 @@ function workaroundToGetNavButtons() {
           <div class="vol-dept">{{ volunteer.department }}</div>
           <div class="vol-bio">
             <i>{{ volunteer.quote }}</i>
+          </div>
+          <div class="vol-links">
+            <a
+              v-if="volunteer.instagram"
+              :href="volunteer.instagram"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="vol-link instagram"
+            >
+              <InstagramLink />
+            </a>
+            <a
+              v-if="volunteer.email"
+              :href="`mailto:${volunteer.email}`"
+              rel="noopener noreferrer"
+              class="vol-link email"
+            >
+              <EmailLink />
+            </a>
           </div>
         </div>
       </div>
@@ -364,6 +385,16 @@ $sub-header-height: 40px;
       }
       .bio {
         text-decoration: it;
+      }
+      .vol-links {
+        display: flex;
+        column-gap: 4px;
+        padding: 0;
+        margin: 0;
+        .vol-link {
+          display: block;
+          width: 28px;
+        }
       }
     }
   }

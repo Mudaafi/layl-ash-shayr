@@ -16,6 +16,8 @@ interface Volunteer extends People {
   department: Department
   bios: string
   imageLink: string
+  instagram: string
+  email: string
 }
 
 interface Committee extends Volunteer {
