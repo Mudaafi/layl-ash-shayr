@@ -1,5 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import constellationWatermelon from '../assets/images/constellation-watermelon.png'
+import constellationMoon from '../assets/images/constellation-moon.png'
 
 import type { GSheetResponse } from '../types'
 
@@ -41,10 +43,10 @@ export const useSessionsStore = defineStore(
     function getSessionConstellation(year: number): string {
       switch (year) {
         case 2023:
-          return '/src/assets/images/constellation-moon.png'
+          return constellationMoon
 
         case 2024:
-          return '/src/assets/images/constellation-watermelon.png'
+          return constellationWatermelon
 
         default:
           return ''
