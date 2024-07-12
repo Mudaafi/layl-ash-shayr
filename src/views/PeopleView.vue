@@ -419,6 +419,7 @@ $sub-header-height: 40px;
           .info {
             margin-bottom: 0px;
             font-size: 2.75vw;
+            text-wrap: nowrap;
           }
         }
       }

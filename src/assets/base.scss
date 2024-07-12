@@ -58,7 +58,7 @@ body {
   }
 
   @media (hover: hover) {
-    a:hover {
+    a:hover:not(.icon) {
       background-color: hsla(43, 42%, 75%, 0.2);
     }
   }

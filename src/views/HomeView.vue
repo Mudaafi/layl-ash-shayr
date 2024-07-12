@@ -9,9 +9,8 @@ const show = false
     <div class="items">
       <TelegramLink class="soc-med" />
 
-      <img src="../assets/images/logo.png" alt="LAS logo" />
-      <h1>Welcome to LAS</h1>
-      <p>Hang tight, we're crafting an even better landing page...</p>
+      <h1>Layl Ash-Shayr</h1>
+      <div class="catch-line"><i>Poetry under the loving gaze of the moon</i></div>
     </div>
   </div>
 
@@ -42,8 +41,11 @@ const show = false
 .bootstrap-home {
   min-height: 100vh;
   min-width: 100vw;
-  background-image: url('../assets/images/stars-bg.jpeg');
+  background-image: url('https://images.unsplash.com/photo-1479090793912-eb9929f4fdb2?q=80&w=2203&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
   background-size: contain;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-color: black;
 
   .items {
     min-height: 100vh;
@@ -55,9 +57,19 @@ const show = false
   }
 }
 
+h1,
+div {
+  color: $secondary-darkest;
+}
+
+.catch-line {
+  color: $primary-darker;
+  font-style: italics;
+}
+
 main.bg {
   background-color: whitesmoke;
-  color: whitesmoke;
+  color: black;
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -108,6 +120,14 @@ main.bg {
     .ink-bottle-darker {
       position: absolute;
     }
+  }
+}
+
+// -- Mobile Styles
+@media (max-width: 1024px) {
+  .catch-line {
+    max-width: 55vw;
+    text-wrap: wrap;
   }
 }
 </style>

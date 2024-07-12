@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import NavBar from '@/components/NavBar.vue'
 import MoonAndStars from '../svgs/MoonAndStars.vue'
 </script>
 
 <template>
   <main>
+    <NavBar />
     <section class="prelude">
       <div class="header">
         <div class="left">

@@ -51,11 +51,15 @@ function login() {
     <div class="subtitle">Coming Soon</div>
   </div>
   <div v-else>
-    <iframe
-      class="pdf-viewer"
-      src="https://drive.google.com/file/d/1ZpWYsU3yZHQEZZpo8DyObhmUzUy-PM7P/preview"
-      allow="autoplay"
-    ></iframe>
+    <div>The Opening Act</div>
+    <div>Anthology</div>
+    <section>Anthology Description</section>
+    <section>
+      order now
+      <a
+        href="https://docs.google.com/forms/d/e/1FAIpQLScYbAHJDylWzNFKOsN3o_iSCb6i0LQezk5VF3El5dSi2de2mQ/viewform"
+      ></a>
+    </section>
   </div>
 </template>
 
