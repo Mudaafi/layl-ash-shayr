@@ -197,6 +197,7 @@ setInterval(() => {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  width: 100vw;
 
   .title {
     font-family: 'Volkorn';
