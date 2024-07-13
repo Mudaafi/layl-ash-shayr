@@ -72,11 +72,4 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore()
-  if (to.name !== 'anthology' && !authStore.isAdmin) {
-    next({ name: 'anthology' })
-  } else next()
-})
-
 export default router
