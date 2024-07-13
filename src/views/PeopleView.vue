@@ -5,6 +5,7 @@ import InstagramLink from '@/svgs/InstagramLink.vue'
 import EmailLink from '@/svgs/EmailLink.vue'
 import { convertDriveImgToLinkable } from '@/utils'
 import { usePeopleStore, type Department } from '@/stores/people'
+import NavDrop from '@/components/NavDrop.vue'
 
 const peopleStore = usePeopleStore()
 peopleStore.fetchCommittee()
@@ -71,6 +72,7 @@ function workaroundToGetNavButtons() {
 </script>
 
 <template>
+  <NavDrop />
   <div class="sub-headers">
     <a
       v-for="subheader in subheaders"

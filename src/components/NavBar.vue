@@ -18,7 +18,7 @@ const menuOpen = ref(false)
     <div class="center">
       <RouterLink to="/about">About</RouterLink>
       <RouterLink to="/people">People</RouterLink>
-      <RouterLink to="/sessions">Sessions</RouterLink>
+      <RouterLink to="/sessions/2024">Sessions</RouterLink>
       <RouterLink to="/anthology">Anthology</RouterLink>
     </div>
 
@@ -54,7 +54,7 @@ const menuOpen = ref(false)
         <RouterLink to="/people">People</RouterLink>
       </li>
       <li class="navlistitem">
-        <RouterLink to="/sessions">Sessions</RouterLink>
+        <RouterLink to="/sessions/2024">Sessions</RouterLink>
       </li>
       <li class="navlistitem">
         <RouterLink to="/anthology">Anthology</RouterLink>

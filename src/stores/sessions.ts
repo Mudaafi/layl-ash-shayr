@@ -18,6 +18,7 @@ interface Session {
   poets: Array<string>
   x_pos: number
   y_pos: number
+  excerpt?: string
 }
 
 const API_CALLS = {

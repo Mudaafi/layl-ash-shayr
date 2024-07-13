@@ -3,6 +3,7 @@ import { usePeopleStore } from '@/stores/people'
 import { useSessionsStore } from '@/stores/sessions'
 import { computed, ref } from 'vue'
 import { convertDriveImgToLinkable } from '@/utils'
+import NavDrop from '@/components/NavDrop.vue'
 
 const { fetchPoets, getPoetByName } = usePeopleStore()
 const { fetchSessions, getSessionsById, getSessionsByYear, getSessionConstellation } =
@@ -17,6 +18,7 @@ const selectedSessionId = ref(-1)
 const sessionsForTheYear = computed(() => getSessionsByYear(parseInt(props.year)))
 const selectedSession = computed(() => getSessionsById(selectedSessionId.value))
 const selectedConstellation = computed(() => getSessionConstellation(parseInt(props.year)))
+const selectedExcerptArr = computed(() => selectedSession.value?.excerpt?.split('\n'))
 
 function setFixed(bool: boolean) {
   fixed.value = bool
@@ -88,6 +90,14 @@ function logMouseClick(e: MouseEvent) {
   console.log(`clicked x:${posX - 4}% y:${posY - 5}%`)
 }
 
+function getStarClass(sessionId: number) {
+  if (selectedSessionId.value !== -1 && selectedSessionId.value !== sessionId) {
+    return 'not-selected'
+  } else if (sessionId === 11) {
+    return 'next'
+  }
+}
+
 // Executions
 fetchSessions()
 fetchPoets()
@@ -98,6 +108,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
 </script>
 
 <template>
+  <NavDrop />
   <div class="space-bg"></div>
 
   <div class="content-container" @click="logMouseClick">
@@ -113,7 +124,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
           v-for="session in sessionsForTheYear"
           :key="new Date(session.date).toISOString()"
           class="star"
-          :class="selectedSessionId !== -1 && selectedSessionId !== session.id && 'not-selected'"
+          :class="getStarClass(session.id)"
           src="../assets/images/star-candidate-1.png"
           @click="(e) => onStarClick(e, session.id)"
           alt="session-icon"
@@ -138,7 +149,14 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
         ft. {{ selectedSession?.featuredSpeakers.join(' & ') }}
       </div>
       <div class="session-date">
-        - {{ selectedSession?.date.toLocaleString('default', { month: 'short', year: 'numeric' }) }}
+        -
+        {{
+          selectedSession?.date.toLocaleString('default', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+          })
+        }}
       </div>
 
       <section class="featured">
@@ -155,7 +173,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
           </div>
         </div>
       </section>
-      <section class="open-mics">
+      <section class="open-mics" v-if="selectedSession?.sessionType === 'OPEN_MIC'">
         <div class="container">
           <h2>Open Mic Lineup</h2>
           <ul class="open-mics-list">
@@ -164,6 +182,9 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
             </li>
           </ul>
         </div>
+      </section>
+      <section class="other-excerpt" v-if="selectedSession?.sessionType !== 'OPEN_MIC'">
+        <p class="excerpt-para" v-for="(p, i) in selectedExcerptArr" :key="i">{{ p }}</p>
       </section>
     </div>
   </div>
@@ -189,8 +210,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
   max-height: 100vh;
   max-width: 100vw;
   min-width: 100vw;
-  overflow: hidden;
-  overflow-y: scroll;
+  overflow-x: hidden;
 
   position: relative;
   .constellation-container {
@@ -238,7 +258,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
         opacity: 75%;
       }
       &.next {
-        animation: pulse 0.25s linear infinite;
+        animation: pulse 0.5s linear infinite;
       }
 
       @keyframes starActive {
@@ -301,7 +321,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
     }
 
     .session-title {
-      font-size: 64px;
+      font-size: 48px;
       font-weight: 600px;
       font-family: 'Pinyon Script', cursive;
       line-height: 60px;
@@ -365,6 +385,13 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
         }
       }
     }
+
+    .other-excerpt {
+      display: flex;
+      flex-direction: column;
+      row-gap: 20px;
+      text-align: justify;
+    }
   }
 }
 
@@ -375,8 +402,13 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
     display: flex !important;
   }
 
+  .space-bg {
+    background-size: cover;
+  }
+
   .content-container .info {
     top: 35%;
+    padding-bottom: 48px;
     .featured {
       .featured-speaker {
         display: grid;
