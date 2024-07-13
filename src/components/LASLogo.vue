@@ -5,7 +5,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="logo">
+  <div class="logo" :style="{ width: props.width }">
     <div class="image hovered">
       <img src="../assets/images/logo.png" alt="LAS Logo Colored" :style="{ width: props.width }" />
     </div>
@@ -16,6 +16,10 @@ const props = defineProps<{
 </template>
 
 <style lang="scss" scoped>
+.logo {
+  position: relative;
+  aspect-ratio: 1;
+}
 .image {
   position: absolute;
   transition: opacity 0.35s ease-in-out;

@@ -7,7 +7,6 @@ import { ref } from 'vue'
 const props = defineProps<{
   poemTitle: string
 }>()
-console.log(props)
 
 const isLoading = ref(false)
 const isMissing = ref(false)

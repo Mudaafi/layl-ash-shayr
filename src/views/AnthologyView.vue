@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import SecretBook from '../svgs/SecretBook.vue'
 import { useAuthStore } from '@/stores/auth'
 import NavDrop from '../components/NavDrop.vue'
+import LASLogo from '@/components/LASLogo.vue'
 
 const authStore = useAuthStore()
 const launchTime = 1720850400000
@@ -62,13 +63,11 @@ const praises = [
     by: '– Daryl Qilin Yam, co-founder of Sing Lit Station and author of <i>Be Your Own Bae</i> (2024), <i>Shantih Shantih Shantih</i> (2021), <i>Lovelier, Lonelier</i> (2021) and <i>Kappa Quartet</i> (2016)'
   }
 ]
-function getPraise(i: number) {
-  return praises[i]
-}
+// function getPraise(i: number) {
+//   return praises[i]
+// }
 
-const praise = computed(() => getPraise(0))
-
-console.log(praise.value.praise.split('\n'))
+// const praise = computed(() => getPraise(0))
 
 setInterval(() => {
   const timeNow = Date.now()
@@ -82,17 +81,19 @@ setInterval(() => {
     praiseIndex.value += 1
   }
 }, 15000)
+const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
 </script>
 
 <template>
   <main class="bg">
-    <NavDrop />
+    <NavDrop v-if="hasLaunched || authStore.isAdmin" />
     <div class="login-header">
       <div></div>
       <button @click="login"><SecretBook class="icon" /></button>
     </div>
 
     <div class="countdown" v-if="!hasLaunched && !authStore.isAdmin">
+      <LASLogo :width="isMobileWidth ? '65px' : '140px'" class="logo" />
       <div class="title">Layl Ash-Shayr Vol 1</div>
       <div class="clock">
         {{ timeObj.days }}d {{ timeObj.hours }}h {{ timeObj.minutes }}m {{ timeObj.seconds }}s
@@ -330,6 +331,15 @@ setInterval(() => {
 
 // -- Mobile Styles {
 @media (max-width: 1024px) {
+  .logo {
+    margin-bottom: 8px;
+  }
+  .countdown {
+    .subtitle {
+      font-size: 2.5vw;
+    }
+  }
+
   .reveal {
     padding: 3vw;
 

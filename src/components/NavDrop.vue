@@ -8,11 +8,14 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
 
 <template>
   <nav class="row navbar" @click="menuOpen = !menuOpen">
-    <LASLogo :width="!isMobileWidth ? '60px' : '48px'" />
+    <LASLogo :width="!isMobileWidth ? '60px' : '32px'" />
   </nav>
 
   <div class="dropdown" :class="{ 'dropdown-after': menuOpen }">
     <ul class="navlist">
+      <li class="navlistitem">
+        <RouterLink to="/">Home</RouterLink>
+      </li>
       <li class="navlistitem">
         <RouterLink to="/about">About</RouterLink>
       </li>
@@ -34,7 +37,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 10;
+  z-index: 20;
   padding: 12px;
   cursor: pointer;
 }
@@ -78,7 +81,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
   overflow: hidden;
   position: fixed;
   top: 0;
-  z-index: 9;
+  z-index: 18;
 }
 
 .dropdown-after {
@@ -98,5 +101,11 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
 .navlistitem a {
   color: $primary-text-emphasis;
   font-weight: 500;
+}
+
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 6px;
+  }
 }
 </style>

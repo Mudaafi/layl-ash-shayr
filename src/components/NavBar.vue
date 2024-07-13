@@ -48,6 +48,9 @@ const menuOpen = ref(false)
   <div class="dropdown is-mobile" :class="{ 'dropdown-after': menuOpen }">
     <ul class="navlist">
       <li class="navlistitem">
+        <RouterLink to="/">Home</RouterLink>
+      </li>
+      <li class="navlistitem">
         <RouterLink to="/about">About</RouterLink>
       </li>
       <li class="navlistitem">
@@ -149,7 +152,7 @@ const menuOpen = ref(false)
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 10;
+    z-index: 20;
     margin-bottom: 20px;
   }
 

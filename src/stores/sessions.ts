@@ -67,7 +67,6 @@ export const useSessionsStore = defineStore(
             date: new Date(el.date)
           }
         })
-        console.log(sessionStore)
 
         return sessionStore
       } else {

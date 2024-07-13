@@ -19,7 +19,6 @@ type PeopleGroup = 'committee' | 'volunteers' | 'poets' | 'everyone'
 const subheaders: Array<PeopleGroup> = ['committee', 'volunteers', 'poets', 'everyone']
 
 function getDeptColor(dept: string | Department) {
-  console.log(dept)
   switch (dept.toLowerCase()) {
     // case 'marketing':
     //   return '#FFADAD'

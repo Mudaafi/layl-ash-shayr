@@ -54,7 +54,6 @@ export const usePeopleStore = defineStore(
         await fetch(`${GSHEET_ENDPOINT}?type=people&function=${API_CALLS.GET.getCommittee}`)
       ).json()
       if (res.success) {
-        console.log(res)
         committeeStore.value = res.body as Array<Committee>
       } else {
         throw new Error(res.errorMsg)
@@ -66,8 +65,6 @@ export const usePeopleStore = defineStore(
         await fetch(`${GSHEET_ENDPOINT}?type=people&function=${API_CALLS.GET.getVolunteers}`)
       ).json()
       if (res.success) {
-        console.log(res)
-
         volunteerStore.value = res.body as Array<Volunteer>
       } else {
         throw new Error(res.errorMsg)
@@ -79,8 +76,6 @@ export const usePeopleStore = defineStore(
         await fetch(`${GSHEET_ENDPOINT}?type=people&function=${API_CALLS.GET.getPoets}`)
       ).json()
       if (res.success) {
-        console.log(res)
-
         poetStore.value = res.body as Array<Volunteer>
       } else {
         throw new Error(res.errorMsg)
