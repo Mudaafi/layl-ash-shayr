@@ -110,7 +110,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
           <img src="../assets/images/antho-front.png" alt="anthology front cover" />
           <div class="order-btn">
             <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLScYbAHJDylWzNFKOsN3o_iSCb6i0LQezk5VF3El5dSi2de2mQ/viewform"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSec-zjj84JYClykRAw1Z6yY5OHahZqaREwnj8l3Reh-ebw3cw/viewform"
             >
               Get Your Copy (virtual)
             </a>
@@ -148,7 +148,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
       <section class="order">
         <div class="order-btn">
           <a
-            href="https://docs.google.com/forms/d/e/1FAIpQLScYbAHJDylWzNFKOsN3o_iSCb6i0LQezk5VF3El5dSi2de2mQ/viewform"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSec-zjj84JYClykRAw1Z6yY5OHahZqaREwnj8l3Reh-ebw3cw/viewform"
           >
             Get Your Copy (virtual)
           </a>
