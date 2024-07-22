@@ -16,6 +16,13 @@ const props = defineProps<{
 const fixed = ref(false)
 const selectedSessionId = ref(-1)
 const sessionsForTheYear = computed(() => getSessionsByYear(parseInt(props.year)))
+const nextSessionId = computed(() => {
+  const upcomingSessions = sessionsForTheYear.value.filter(
+    (session) => Date.now() < session?.date?.getTime()
+  )
+
+  return upcomingSessions[0].id || -1
+})
 const selectedSession = computed(() => getSessionsById(selectedSessionId.value))
 const selectedConstellation = computed(() => getSessionConstellation(parseInt(props.year)))
 const selectedExcerptArr = computed(() => selectedSession.value?.excerpt?.split('\n'))
@@ -93,7 +100,7 @@ function logMouseClick(e: MouseEvent) {
 function getStarClass(sessionId: number) {
   if (selectedSessionId.value !== -1 && selectedSessionId.value !== sessionId) {
     return 'not-selected'
-  } else if (sessionId === 11) {
+  } else if (sessionId === nextSessionId.value) {
     return 'next'
   }
 }
@@ -174,7 +181,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
         </div>
       </section>
       <section class="open-mics" v-if="selectedSession?.sessionType === 'OPEN_MIC'">
-        <div class="container">
+        <div class="container" v-if="selectedSession?.poets.length > 0">
           <h2>Open Mic Lineup</h2>
           <ul class="open-mics-list">
             <li class="poet" v-for="openMicers in selectedSession?.poets" :key="openMicers">
@@ -182,7 +189,15 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
             </li>
           </ul>
         </div>
+        <div class="sign-up-btn" v-else>
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSdQ4tG3qOGVtCaMcf78s6DOKYZbnigQQBn1vaYops2GUqSvnQ/viewform"
+          >
+            Register Today!
+          </a>
+        </div>
       </section>
+
       <section class="other-excerpt" v-if="selectedSession?.sessionType !== 'OPEN_MIC'">
         <p class="excerpt-para" v-for="(p, i) in selectedExcerptArr" :key="i">{{ p }}</p>
       </section>
@@ -191,6 +206,24 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
 </template>
 
 <style lang="scss" scoped>
+.sign-up-btn {
+  cursor: pointer;
+  border: 1px solid $primary;
+  padding: 10px 14px;
+  border-radius: 8px;
+  transition: all 0.15s ease-in;
+  text-align: center;
+
+  &:hover {
+    background-color: $secondary;
+    border: 1px solid $primary-darker;
+    color: $primary-darker;
+    a {
+      color: black;
+    }
+  }
+}
+
 .space-bg {
   position: absolute;
   top: 0;
@@ -372,13 +405,15 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
       text-align: left;
 
       .container {
-        width: 12vw;
+        width: 15vw;
+        text-align: center;
 
         h2 {
           text-decoration: underline 1px;
         }
 
         .open-mics-list {
+          list-style: none;
           .poet {
             font-size: 18px;
           }

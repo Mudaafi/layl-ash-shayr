@@ -12,7 +12,7 @@ interface Session {
   id: number
   year: number
   date: Date
-  sessionType: 'OPEN_MIC'
+  sessionType: 'OPEN_MIC' | null
   sessionTitle: string
   featuredSpeakers: Array<string>
   poets: Array<string>
@@ -24,6 +24,18 @@ interface Session {
 const API_CALLS = {
   GET: {
     getSessions: 'getSessions'
+  }
+}
+
+function convertSessionType(sessionType: string | null): 'OPEN_MIC' | null {
+  const convertedType = sessionType.toUpperCase().replace(/ /g, '_')
+
+  switch (convertedType) {
+    case 'OPEN_MIC':
+      return 'OPEN_MIC'
+
+    default:
+      return null
   }
 }
 
@@ -64,6 +76,8 @@ export const useSessionsStore = defineStore(
         sessionStore.value = resBody.map((el) => {
           return {
             ...el,
+            sessionType: convertSessionType(el.sessionType),
+            sessionTitle: el.sessionTitle || el.sessionType || '',
             date: new Date(el.date)
           }
         })
