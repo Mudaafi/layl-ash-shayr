@@ -190,11 +190,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
           </ul>
         </div>
         <div class="sign-up-btn" v-else>
-          <a
-            href="https://docs.google.com/forms/d/e/1FAIpQLSdQ4tG3qOGVtCaMcf78s6DOKYZbnigQQBn1vaYops2GUqSvnQ/viewform"
-          >
-            Register Today!
-          </a>
+          <a :href="selectedSession.signUpLink" target="_blank"> Register Today! </a>
         </div>
       </section>
 

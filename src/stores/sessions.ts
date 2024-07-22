@@ -16,6 +16,7 @@ interface Session {
   sessionTitle: string
   featuredSpeakers: Array<string>
   poets: Array<string>
+  signUpLink: string
   x_pos: number
   y_pos: number
   excerpt?: string
@@ -28,7 +29,7 @@ const API_CALLS = {
 }
 
 function convertSessionType(sessionType: string | null): 'OPEN_MIC' | null {
-  const convertedType = sessionType.toUpperCase().replace(/ /g, '_')
+  const convertedType = sessionType?.toUpperCase()?.replace(/ /g, '_')
 
   switch (convertedType) {
     case 'OPEN_MIC':

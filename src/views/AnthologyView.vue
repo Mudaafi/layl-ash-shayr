@@ -111,6 +111,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
           <div class="order-btn">
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSec-zjj84JYClykRAw1Z6yY5OHahZqaREwnj8l3Reh-ebw3cw/viewform"
+              target="_blank"
             >
               Get Your Copy
             </a>
