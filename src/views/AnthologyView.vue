@@ -112,7 +112,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSec-zjj84JYClykRAw1Z6yY5OHahZqaREwnj8l3Reh-ebw3cw/viewform"
             >
-              Get Your Copy (virtual)
+              Get Your Copy
             </a>
           </div>
         </div>
@@ -150,7 +150,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
           <a
             href="https://docs.google.com/forms/d/e/1FAIpQLSec-zjj84JYClykRAw1Z6yY5OHahZqaREwnj8l3Reh-ebw3cw/viewform"
           >
-            Get Your Copy (virtual)
+            Get Your Copy
           </a>
         </div>
       </section>
