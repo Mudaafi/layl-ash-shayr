@@ -17,9 +17,10 @@ const fixed = ref(false)
 const selectedSessionId = ref(-1)
 const sessionsForTheYear = computed(() => getSessionsByYear(parseInt(props.year)))
 const nextSessionId = computed(() => {
-  const upcomingSessions = sessionsForTheYear.value.filter(
-    (session) => Date.now() < session?.date?.getTime()
-  )
+  const upcomingSessions = sessionsForTheYear.value.filter((session) => {
+    if (typeof session?.date?.getTime === 'function') return Date.now() < session?.date?.getTime()
+    return false
+  })
 
   return upcomingSessions[0].id || -1
 })
