@@ -61,6 +61,18 @@ const praises = [
     praise:
       'May this book be a glowing testament to a thriving and unashamedly Muslim scene in poetry-writing Singapore. The editors Laili, Zu and Sarah have worked tirelessly to give a platform to so many eager voices, and this beautiful anthology is proof that with enough passion, zeal and generosity of spirit, the possibilities are quite simply endless.',
     by: '– Daryl Qilin Yam, co-founder of Sing Lit Station and author of <i>Be Your Own Bae</i> (2024), <i>Shantih Shantih Shantih</i> (2021), <i>Lovelier, Lonelier</i> (2021) and <i>Kappa Quartet</i> (2016)'
+  },
+
+  {
+    praise:
+      "Anyone can see themselves mirrored in the honesty and sincerity in this collection. Reading this felt like a hug, from a stranger, a loved one, a long-lost friend, the cool wind. You don't come to read this book seeking excitement, you come seeking a drink for your thirst, or some gas to fill up your nearly-empty tank. It's watching these writers open up their windows to let the sunshine in after the rain and feeling that light reflect upon you. Lovely stuff!",
+    by: '– Nessa Anwar, journalist and playwright of <i>Riders Know When It’s Gonna Rain and Rumah Dayak</i>, co-founder of Main Tulis Group and Rupa co.lab'
+  },
+
+  {
+    praise:
+      'The Opening Act is a breathless delight. It is also a stunning pause, and a window to gratitude: here, poetry is thoughtful about its place in the universe. Which poetry is usually meant to be, yes, but here, these words assign new meaning to understanding our place as Muslims, as lovers of God, as participants in this beautiful world.',
+    by: '– Irie Aman, creative and community leader, host of dinkcollective open mic and lead of QUASA SG'
   }
 ]
 // function getPraise(i: number) {
