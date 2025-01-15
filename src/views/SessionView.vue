@@ -22,7 +22,7 @@ const nextSessionId = computed(() => {
     return false
   })
 
-  return upcomingSessions[0].id || -1
+  return upcomingSessions[0]?.id || -1
 })
 const selectedSession = computed(() => getSessionsById(selectedSessionId.value))
 const selectedConstellation = computed(() => getSessionConstellation(parseInt(props.year)))
@@ -119,7 +119,8 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
   <NavDrop />
   <div class="space-bg"></div>
 
-  <div class="content-container" @click="logMouseClick">
+  <div v-if="sessionsForTheYear.length === 0">Loading...</div>
+  <div v-else class="content-container" @click="logMouseClick">
     <div class="constellation-container" id="constellation-container">
       <img
         class="constellation"
@@ -130,16 +131,16 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
       <div class="stars-container">
         <img
           v-for="session in sessionsForTheYear"
-          :key="new Date(session.date).toISOString()"
+          :key="new Date(session?.date).toISOString()"
           class="star"
-          :class="getStarClass(session.id)"
+          :class="getStarClass(session?.id)"
           src="../assets/images/star-candidate-1.png"
-          @click="(e) => onStarClick(e, session.id)"
+          @click="(e) => onStarClick(e, session?.id)"
           alt="session-icon"
           :style="{
             color: 'red',
-            top: `${!isMobileWidth ? session.y_pos : session.y_pos - 5}%`,
-            left: `${!isMobileWidth ? session.x_pos : session.x_pos - 5}%`
+            top: `${!isMobileWidth ? session?.y_pos : session?.y_pos - 5}%`,
+            left: `${!isMobileWidth ? session?.x_pos : session?.x_pos - 5}%`
           }"
         />
       </div>
