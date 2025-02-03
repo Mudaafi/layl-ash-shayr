@@ -7,10 +7,14 @@ const props = defineProps<{
 <template>
   <div class="logo" :style="{ width: props.width }">
     <div class="image hovered">
-      <img src="../assets/images/logo.png" alt="LAS Logo Colored" :style="{ width: props.width }" />
+      <img
+        src="../assets/images/logo-light.png"
+        alt="LAS Logo Colored"
+        :style="{ width: props.width }"
+      />
     </div>
     <div class="image inactive">
-      <img src="../assets/images/logo-wb.png" alt="LAS Logo" :style="{ width: props.width }" />
+      <img src="../assets/images/logo-white.png" alt="LAS Logo" :style="{ width: props.width }" />
     </div>
   </div>
 </template>

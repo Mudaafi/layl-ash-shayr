@@ -11,7 +11,7 @@ const menuOpen = ref(false)
   <nav class="is-desktop">
     <div class="left">
       <RouterLink class="icon" to="/">
-        <LASLogo width="80px" class="logo" />
+        <LASLogo width="88px" class="logo" />
       </RouterLink>
     </div>
 
