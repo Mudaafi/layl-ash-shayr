@@ -8,7 +8,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
 
 <template>
   <nav class="row navbar" @click="menuOpen = !menuOpen">
-    <LASLogo :width="!isMobileWidth ? '60px' : '32px'" />
+    <LASLogo :width="!isMobileWidth ? '66px' : '48px'" />
   </nav>
 
   <div class="dropdown" :class="{ 'dropdown-after': menuOpen }">

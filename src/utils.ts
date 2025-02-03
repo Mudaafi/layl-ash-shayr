@@ -8,5 +8,6 @@ export function convertDriveImgToLinkable(imgLink: string) {
     imgId = url.searchParams.get('id')
   }
 
-  return `https://drive.google.com/thumbnail?id=${imgId}&sz=w1000`
+  // return `https://drive.google.com/thumbnail?id=${imgId}&sz=w1000`
+  return `https://lh3.googleusercontent.com/d/${imgId}=w1000?authuser=0`
 }

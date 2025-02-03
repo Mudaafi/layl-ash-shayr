@@ -105,7 +105,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
     </div>
 
     <div class="countdown" v-if="!hasLaunched && !authStore.isAdmin">
-      <LASLogo :width="isMobileWidth ? '65px' : '140px'" class="logo" />
+      <LASLogo :width="isMobileWidth ? '70px' : '145px'" class="logo" />
       <div class="title">Layl Ash-Shayr Vol 1</div>
       <div class="clock">
         {{ timeObj.days }}d {{ timeObj.hours }}h {{ timeObj.minutes }}m {{ timeObj.seconds }}s
