@@ -75,11 +75,6 @@ const praises = [
     by: '– Irie Aman, creative and community leader, host of dinkcollective open mic and lead of QUASA SG'
   }
 ]
-// function getPraise(i: number) {
-//   return praises[i]
-// }
-
-// const praise = computed(() => getPraise(0))
 
 setInterval(() => {
   const timeNow = Date.now()
@@ -114,18 +109,28 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
     </div>
 
     <div v-else class="reveal">
-      <!-- <div class="title-header">Layl Ash-Shayr Vol. 1</div>
-    <div class="title">The Opening Act</div>
-    <div class="subtext">An Anthology by LAS</div> -->
       <section class="image">
         <div class="antho-front">
           <img src="../assets/images/antho-front.png" alt="anthology front cover" />
           <div class="order-btn">
             <a
+              href="https://www.singlitstation.com/shop/layl-ash-shayr-vol-i-the-opening-act"
+              target="_blank"
+            >
+              Get Your Copy @ Sing Lit Station
+            </a>
+          </div>
+          <div class="order-btn">
+            <a href="https://wardahbooks.com/products/the-opening-act" target="_blank">
+              Get Your Copy @ Wardah Books
+            </a>
+          </div>
+          <div class="order-btn">
+            <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSec-zjj84JYClykRAw1Z6yY5OHahZqaREwnj8l3Reh-ebw3cw/viewform"
               target="_blank"
             >
-              Get Your Copy
+              Get Your Copy @ LAS
             </a>
           </div>
         </div>
@@ -312,8 +317,8 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
   .order-btn {
     cursor: pointer;
     border: 1px solid $primary;
-    padding: 10px 14px;
     border-radius: 8px;
+    padding: 0;
     transition: all 0.15s ease-in;
     text-align: center;
 
@@ -325,6 +330,13 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
         color: black;
       }
     }
+
+    & a {
+      display: block;
+      padding: 10px 14px;
+      width: 100%;
+      height: 100%;
+    }
   }
 
   .order {
@@ -332,15 +344,6 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
     justify-content: center;
   }
 }
-
-// .pdf-viewer {
-//   height: 90vh;
-//   aspect-ratio: 1;
-//   position: absolute;
-//   top: 50%;
-//   left: 50%;
-//   transform: translate(-50%, -50%);
-// }
 
 // -- Mobile Styles {
 @media (max-width: 1024px) {
