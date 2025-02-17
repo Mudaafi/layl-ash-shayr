@@ -75,11 +75,6 @@ const praises = [
     by: '– Irie Aman, creative and community leader, host of dinkcollective open mic and lead of QUASA SG'
   }
 ]
-// function getPraise(i: number) {
-//   return praises[i]
-// }
-
-// const praise = computed(() => getPraise(0))
 
 setInterval(() => {
   const timeNow = Date.now()
@@ -349,15 +344,6 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
     justify-content: center;
   }
 }
-
-// .pdf-viewer {
-//   height: 90vh;
-//   aspect-ratio: 1;
-//   position: absolute;
-//   top: 50%;
-//   left: 50%;
-//   transform: translate(-50%, -50%);
-// }
 
 // -- Mobile Styles {
 @media (max-width: 1024px) {
