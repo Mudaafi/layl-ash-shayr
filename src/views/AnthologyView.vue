@@ -322,8 +322,8 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
   .order-btn {
     cursor: pointer;
     border: 1px solid $primary;
-    padding: 10px 14px;
     border-radius: 8px;
+    padding: 0;
     transition: all 0.15s ease-in;
     text-align: center;
 
@@ -334,6 +334,13 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
       a {
         color: black;
       }
+    }
+
+    & a {
+      display: block;
+      padding: 10px 14px;
+      width: 100%;
+      height: 100%;
     }
   }
 
