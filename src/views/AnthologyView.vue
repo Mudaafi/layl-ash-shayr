@@ -114,18 +114,28 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
     </div>
 
     <div v-else class="reveal">
-      <!-- <div class="title-header">Layl Ash-Shayr Vol. 1</div>
-    <div class="title">The Opening Act</div>
-    <div class="subtext">An Anthology by LAS</div> -->
       <section class="image">
         <div class="antho-front">
           <img src="../assets/images/antho-front.png" alt="anthology front cover" />
           <div class="order-btn">
             <a
+              href="https://www.singlitstation.com/shop/layl-ash-shayr-vol-i-the-opening-act"
+              target="_blank"
+            >
+              Get Your Copy - Sing Lit Station
+            </a>
+          </div>
+          <div class="order-btn">
+            <a href="https://wardahbooks.com/products/the-opening-act" target="_blank">
+              Get Your Copy - Wardah Books
+            </a>
+          </div>
+          <div class="order-btn">
+            <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSec-zjj84JYClykRAw1Z6yY5OHahZqaREwnj8l3Reh-ebw3cw/viewform"
               target="_blank"
             >
-              Get Your Copy
+              Get Your Copy - LAS
             </a>
           </div>
         </div>
