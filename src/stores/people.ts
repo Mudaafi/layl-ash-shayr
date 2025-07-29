@@ -3,8 +3,7 @@ import { defineStore } from 'pinia'
 
 import type { GSheetResponse } from '../types'
 
-const GSHEET_ENDPOINT =
-  'https://script.google.com/macros/s/AKfycbzagodSt3YhOugR-3IrX5-Nz8qxa5wGg1WuEVYhuixnsrqdMyCO6gxFvm-UudkPCyLY/exec'
+import { GSHEET_ENDPOINT } from '@/constants'
 
 interface People {
   name: string

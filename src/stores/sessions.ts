@@ -6,8 +6,7 @@ import constellationLeaf from '../assets/images/constellation-leaf.png'
 
 import type { GSheetResponse } from '../types'
 
-const GSHEET_ENDPOINT =
-  'https://script.google.com/macros/s/AKfycbzagodSt3YhOugR-3IrX5-Nz8qxa5wGg1WuEVYhuixnsrqdMyCO6gxFvm-UudkPCyLY/exec'
+import { GSHEET_ENDPOINT } from '@/constants'
 
 interface Session {
   id: number

@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+declare module 'vue-horizontal'
 
 interface ImportMetaEnv {
   readonly VITE_APP_TITLE: string

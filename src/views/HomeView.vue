@@ -1,6 +1,13 @@
 <script setup lang="ts">
+import { useConfigStore } from '@/stores/configs'
 import NavBar from '../components/NavBar.vue'
+import ShadcnButton from '@/components/ui/button/shadcnButton.vue'
+
 const show = false
+const { nextSessionSignUpLink, volunteerSignUpLink, purchaseAnthologyLink, getConfigs } =
+  useConfigStore()
+
+getConfigs()
 </script>
 
 <template>
@@ -11,6 +18,8 @@ const show = false
 
       <h1>Layl Ash-Shayr</h1>
       <div class="catch-line"><i>Poetry under the loving gaze of the moon</i></div>
+      <!-- <div class="circle" :style="{}"></div> -->
+      <ShadcnButton variant="outline" @click="() => console.log('test')">test</ShadcnButton>
     </div>
   </div>
 
@@ -38,6 +47,14 @@ const show = false
 </template>
 
 <style lang="scss" scoped>
+.circle {
+  width: 100px;
+  height: 100px;
+  background-color: yellow;
+  border-radius: 100%;
+  position: absolute;
+}
+
 .bootstrap-home {
   min-height: 100vh;
   min-width: 100vw;
