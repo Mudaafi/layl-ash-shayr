@@ -72,50 +72,56 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
 </script>
 
 <template>
-  <div class="header padded">
-    <LASLogo class="logo" :width="!isMobileWidth ? '66px' : '100px'" />
-    <h1>Layl Ash Shayr</h1>
-    <div class="catch-phrase">
-      <i>{{ subtitle }}</i>
-    </div>
+  <div class="grid">
+    <div class="header padded">
+      <LASLogo class="logo" :width="!isMobileWidth ? '200px' : '100px'" />
+      <h1>Layl Ash Shayr</h1>
+      <div class="catch-phrase">
+        <i>{{ subtitle }}</i>
+      </div>
 
-    <div class="social-media">
-      <InstagramLink href="https://www.instagram.com/laylashshayr" class="soc-med" />
-      <InstagramLink href="https://www.instagram.com/laylashshayr" class="soc-med" />
+      <div class="social-media">
+        <InstagramLink href="https://www.instagram.com/laylashshayr" class="soc-med" />
+        <InstagramLink href="https://www.instagram.com/laylashshayr" class="soc-med" />
+      </div>
     </div>
+    <ul class="linktree">
+      <li v-for="item in list" class="link">
+        <a :href="item.href">{{ item.displayText }}</a>
+      </li>
+    </ul>
   </div>
-  <ul class="linktree">
-    <li v-for="item in list" class="link">
-      <a :href="item.href">{{ item.displayText }}</a>
-    </li>
-  </ul>
 </template>
 
 <style lang="scss" scoped>
+@media (min-width: $desktop-width) {
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 2px;
+  }
+}
+
 .logo {
   margin-bottom: 8px;
 }
 
 .social-media {
-  margin: 12px 0 0;
+  margin: 12px 0;
   display: flex;
   column-gap: 10px;
   .soc-med {
     width: 32px;
+    height: 32px;
     aspect-ratio: 1;
-    object-fit: contain;
   }
-}
-
-.padded {
-  padding: 4vh 10vw 0;
-  display: flex;
-  flex-direction: column;
 
   @media (min-width: $desktop-width) {
-    padding: 0 20vw;
-    height: 100vh;
-    justify-content: center;
+    margin: 20px 0;
+    .soc-med {
+      width: 42px;
+      height: 42px;
+    }
   }
 }
 
@@ -124,8 +130,16 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
   align-items: center;
   margin-bottom: 24px;
 
-  @media (min-width: $desktop-width) {
-    margin-bottom: 24px;
+  &.padded {
+    padding: 4vh 10vw 0;
+    display: flex;
+    flex-direction: column;
+
+    @media (min-width: $desktop-width) {
+      height: 100dvh;
+      justify-content: center;
+      padding: 0 4vw;
+    }
   }
 
   h1,
@@ -142,11 +156,13 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
 }
 
 .linktree {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   row-gap: 14px;
 
   @media (min-width: $desktop-width) {
     row-gap: 16px;
+    justify-content: center;
   }
 
   .link {
