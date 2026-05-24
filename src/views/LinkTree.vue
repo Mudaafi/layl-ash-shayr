@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import LASLogo from '@/components/LASLogo.vue'
 import InstagramLink from '@/svgs/InstagramLink.vue'
+import TelegramLink from '@/svgs/TelegramLink.vue'
 
 /**
  * API -> Array of objects {}
@@ -45,16 +46,8 @@ const list: Array<ListItem> = [
     displayText: 'March Feedback ✍🏼'
   },
   {
-    href: 'https://docs.google.com/forms/d/e/1FAIpQLSfGPK7t3ogfPRha-fW6h8SAYsQuH_axb0WOj0cMmjaBgz2_cA/viewform',
-    displayText: '19 April Book Launch 🎟️'
-  },
-  {
     href: 'https://docs.google.com/forms/d/e/1FAIpQLSdGLrqDY73mKn7D2urlf4aAkMN71ILfSFzgVizYKR8vt90L3A/viewform',
     displayText: 'Volunteer with LAS!'
-  },
-  {
-    href: 'https://t.me/+xJvGbSl6Xa9lNDZl',
-    displayText: 'Join our telegram group chat for updates!'
   },
   {
     href: 'https://laylashshayr.com/anthology',
@@ -82,7 +75,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
 
       <div class="social-media">
         <InstagramLink href="https://www.instagram.com/laylashshayr" class="soc-med" />
-        <InstagramLink href="https://www.instagram.com/laylashshayr" class="soc-med" />
+        <TelegramLink href="https://t.me/+xJvGbSl6Xa9lNDZl" class="soc-med" />
       </div>
     </div>
     <ul class="linktree">
