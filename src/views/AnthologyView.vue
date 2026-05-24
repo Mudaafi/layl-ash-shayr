@@ -219,7 +219,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
   width: 100vw;
 
   .title {
-    font-family: 'Volkorn';
+    font-family: 'Vollkorn';
     font-size: 4vw;
   }
 
@@ -234,7 +234,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
   }
 
   .subtitle {
-    font-family: 'Volkorn';
+    font-family: 'Vollkorn';
     font-size: 1vw;
   }
 }
