@@ -7,6 +7,7 @@ import {
   type QueryDocumentSnapshot,
   type FirestoreDataConverter
 } from 'firebase/firestore/lite'
+import { computed } from 'vue'
 
 /**
  * Because we need auth to allow for writes, google macros won't cut it.
@@ -23,6 +24,7 @@ export default function useLinktree() {
   const { firestore } = useFiretore()
   const documentPath = doc(firestore, 'website', 'linktree').withConverter(linktreeConverter)
   const links = useStorage<Array<LinkTreeItem>>('linktree-links', [], sessionStorage)
+  const isLoading = computed(() => links.value.length === 0)
 
   async function fetchLinktree() {
     const document = await getDoc(documentPath)
@@ -31,8 +33,13 @@ export default function useLinktree() {
     links.value = fetchedLinks
   }
 
+  if (links.value.length === 0) {
+    fetchLinktree()
+  }
+
   return {
     links,
+    isLoading,
     fetchLinktree
   }
 }

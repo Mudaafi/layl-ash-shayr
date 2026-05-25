@@ -4,11 +4,7 @@ import useLinktree, { type LinkTreeItem } from '@/stores/linktree'
 import InstagramLink from '@/svgs/InstagramLink.vue'
 import TelegramLink from '@/svgs/TelegramLink.vue'
 
-const { links, fetchLinktree } = useLinktree()
-
-if (links.value.length === 0) {
-  fetchLinktree()
-}
+const { links, fetchLinktree, isLoading } = useLinktree()
 
 /**
  * Configs applying to specific tree items
@@ -44,7 +40,9 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
 </script>
 
 <template>
-  <div class="grid">
+  <!-- TODO: Better Loading Screen -->
+  <div v-if="isLoading" class="loading">Loading...</div>
+  <div class="grid" v-if="!isLoading">
     <div class="header padded">
       <LASLogo class="logo" :width="!isMobileWidth ? '200px' : '100px'" />
       <h1>Layl Ash Shayr</h1>
@@ -66,6 +64,13 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
 </template>
 
 <style lang="scss" scoped>
+.loading {
+  display: flex;
+  height: 100dvh;
+  justify-content: center;
+  align-items: center;
+}
+
 @media (min-width: $desktop-width) {
   .grid {
     display: grid;
