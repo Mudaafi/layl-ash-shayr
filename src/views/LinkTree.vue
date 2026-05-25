@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import LASLogo from '@/components/LASLogo.vue'
+import useLinktree, { type LinkTreeItem } from '@/stores/linktree'
 import InstagramLink from '@/svgs/InstagramLink.vue'
 import TelegramLink from '@/svgs/TelegramLink.vue'
 
-/**
- * API -> Array of objects {}
- * - Firestore? Or google?
- * Cache - Pinia
- * For each array, we render a list item
- * List item props: object + styles (future)
- */
+const { links, fetchLinktree } = useLinktree()
+
+if (links.value.length === 0) {
+  fetchLinktree()
+}
 
 /**
  * Configs applying to specific tree items
@@ -35,26 +34,6 @@ interface LinkTreeConfigs extends ListItemConfigs {
   backgroundImage: string
 }
 
-interface ListItem {
-  href: string
-  displayText: string
-}
-
-const list: Array<ListItem> = [
-  {
-    href: 'https://docs.google.com/forms/d/e/1FAIpQLSc9ROXFF7StwvdiWopEkzBw40ANmdHxb5Yqyszuqm7pZRWXnw/viewform',
-    displayText: 'March Feedback ✍🏼'
-  },
-  {
-    href: 'https://docs.google.com/forms/d/e/1FAIpQLSdGLrqDY73mKn7D2urlf4aAkMN71ILfSFzgVizYKR8vt90L3A/viewform',
-    displayText: 'Volunteer with LAS!'
-  },
-  {
-    href: 'https://laylashshayr.com/anthology',
-    displayText: 'Buy Our Anthology!'
-  }
-]
-
 const subtitles = [
   'Just a group of SG Muslim lit fans, building our little community day by day',
   'Poetry under the loving gaze of the moon'
@@ -79,7 +58,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
       </div>
     </div>
     <ul class="linktree">
-      <li v-for="item in list" class="link">
+      <li v-for="item in links" class="link">
         <a :href="item.href">{{ item.displayText }}</a>
       </li>
     </ul>
