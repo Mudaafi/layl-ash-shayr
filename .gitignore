@@ -30,3 +30,7 @@ coverage
 
 # Local Netlify folder
 .netlify
+
+# Socrates
+.local
+client_secret_*

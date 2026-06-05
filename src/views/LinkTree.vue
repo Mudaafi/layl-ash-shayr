@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import LASLogo from '@/components/LASLogo.vue'
+import LoginHeader from '@/components/LoginHeader.vue'
+import Test from '@/components/Test.vue'
 import useLinktree, { type LinkTreeItem } from '@/stores/linktree'
 import InstagramLink from '@/svgs/InstagramLink.vue'
 import TelegramLink from '@/svgs/TelegramLink.vue'
@@ -43,8 +45,10 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
   <!-- TODO: Better Loading Screen -->
   <div v-if="isLoading" class="loading">Loading...</div>
   <div class="grid" v-if="!isLoading">
+    <LoginHeader />
     <div class="header padded">
       <LASLogo class="logo" :width="!isMobileWidth ? '200px' : '100px'" />
+      <Test />
       <h1>Layl Ash Shayr</h1>
       <div class="catch-phrase">
         <i>{{ subtitle }}</i>

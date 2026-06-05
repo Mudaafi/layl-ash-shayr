@@ -6,6 +6,15 @@
     },
     {
       "path": "./tsconfig.app.json"
+    },
+  ],
+  // This is required for ShadCN's compilation step
+    "compilerOptions": {
+    "composite": true,
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
     }
-  ]
+  }
 }

@@ -22,7 +22,7 @@ import { computed } from 'vue'
 
 export default function useLinktree() {
   const { firestore } = useFiretore()
-  const documentPath = doc(firestore, 'website', 'linktree').withConverter(linktreeConverter)
+  const documentPath = doc(firestore.value, 'website', 'linktree').withConverter(linktreeConverter)
   const links = useStorage<Array<LinkTreeItem>>('linktree-links', [], sessionStorage)
   const isLoading = computed(() => links.value.length === 0)
 
