@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import useFiretore from '@/stores/firestore'
-import { decodeJWT } from '@/utils'
-import { signInWithCredential } from 'firebase/auth'
+import { signInWithCredential, type UserCredential } from 'firebase/auth'
 import { GoogleAuthProvider } from 'firebase/auth/web-extension'
 import { onMounted } from 'vue'
 
@@ -11,10 +10,14 @@ declare global {
   }
 }
 
+const emit = defineEmits<{
+  onLoggedIn: [UserCredential]
+}>()
+
 // Accept redirect prop (or just hardcode it in)
 let initialized = false
 
-function onGoogleAuth(response: any) {
+async function onGoogleAuth(response: any) {
   // console.log('Encoded JWT ID token: ' + response.credential)
 
   // const responsePayload = decodeJWT(response.credential)
@@ -30,10 +33,9 @@ function onGoogleAuth(response: any) {
 
   const { auth, app } = useFiretore()
   const googleCreds = GoogleAuthProvider.credential(response.credential)
-  console.log('🚀 ~ onGoogleAuth ~ googleCreds:', googleCreds)
+  const user = await signInWithCredential(auth.value, googleCreds)
 
-  const res = signInWithCredential(auth.value, googleCreds)
-  console.log('🚀 ~ onGoogleAuth ~ res:', res)
+  emit('onLoggedIn', user)
 }
 
 const initSignIn = () => {
@@ -43,7 +45,8 @@ const initSignIn = () => {
 
   window.google.accounts.id.initialize({
     client_id: '396637985943-ellr423lfd5j0krsad9phhta1t6go9cp.apps.googleusercontent.com',
-    callback: onGoogleAuth
+    callback: onGoogleAuth,
+    cancel_on_tap_outside: false
   })
 
   window.google.accounts.id.renderButton(btnElem, {
@@ -60,8 +63,9 @@ const initSignIn = () => {
 }
 
 onMounted(() => {
-  if (typeof window.google !== 'undefined') {
+  if (typeof window.google !== 'undefined' && !initialized) {
     initSignIn()
+    initialized = true
   }
 })
 </script>

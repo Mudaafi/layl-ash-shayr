@@ -29,6 +29,7 @@ function closeDialog() {
         <button><SecretBook class="icon" /></button>
       </AlertDialogTrigger>
     </div>
+
     <AlertDialogContent @on-overlay-click="closeDialog">
       <AlertDialogHeader>
         <AlertDialogTitle class="text-center">Admin Login</AlertDialogTitle>
@@ -37,7 +38,9 @@ function closeDialog() {
       <!-- <div class="divider"></div> -->
 
       <AlertDialogFooter class="flex sm:flex-col items-center">
-        <AlertDialogAction class="p-0 sm:p-0 bg-transparent"><GoogleSignIn /></AlertDialogAction>
+        <AlertDialogAction class="p-0 sm:p-0 bg-transparent"
+          ><GoogleSignIn @on-logged-in="closeDialog"
+        /></AlertDialogAction>
         <!-- <AlertDialogAction>Continue</AlertDialogAction> -->
       </AlertDialogFooter>
     </AlertDialogContent>

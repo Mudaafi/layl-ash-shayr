@@ -70,4 +70,9 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* For Reka-UI, under GoogleSignIn.uve 
+   * https://github.com/unovue/reka-ui/issues/1540
+   */
+  pointer-events: unset !important;
 }
