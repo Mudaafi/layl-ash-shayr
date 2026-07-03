@@ -8,6 +8,7 @@ import TelegramLink from '@/svgs/TelegramLink.vue'
 import useEditablePage from '@/stores/editable-page'
 import { watch } from 'vue'
 import PickOneFromMany from '@/components/editables/PickOneFromMany.vue'
+import { VueDraggable } from 'vue-draggable-plus'
 
 const { links, subtitles, isLoading, updateLinktree } = useLinktree()
 const { isEditing } = useEditablePage()
@@ -62,7 +63,17 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
         <TelegramLink href="https://t.me/+xJvGbSl6Xa9lNDZl" class="soc-med" />
       </div>
     </div>
-    <link-list :links="links" :editable="isEditing" />
+
+    <VueDraggable
+      v-model="links"
+      target=".link-list"
+      draggable="li"
+      class="draggable-link-list"
+      :disabled="!isEditing"
+      handle=".draggable-handle"
+    >
+      <link-list :links="links" :editable="isEditing" />
+    </VueDraggable>
   </div>
 </template>
 
@@ -132,5 +143,11 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
     line-height: 1;
     margin-top: 8px;
   }
+}
+
+.draggable-link-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
