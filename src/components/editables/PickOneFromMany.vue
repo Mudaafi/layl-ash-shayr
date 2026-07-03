@@ -23,15 +23,16 @@ const isOpen = ref(false)
 function closeDialog() {
   isOpen.value = false
 }
+function openDialog() {
+  if (editable) isOpen.value = true
+}
 </script>
 
 <template>
   <AlertDialog v-model:open="isOpen">
-    <AlertDialogTrigger as-child>
-      <div :class="editable ? 'editing' : ''" ref="container">
-        {{ selectedString }}
-      </div>
-    </AlertDialogTrigger>
+    <div :class="editable ? 'editing' : ''" ref="container" @click="() => openDialog()">
+      {{ selectedString }}
+    </div>
     <AlertDialogContent @on-overlay-click="closeDialog">
       <AlertDialogHeader>
         <AlertDialogTitle class="text-center">Cool one-liners</AlertDialogTitle>
