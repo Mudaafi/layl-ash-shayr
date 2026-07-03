@@ -166,7 +166,7 @@ function workaroundToGetNavButtons() {
               rel="noopener noreferrer"
               class="vol-link instagram"
             >
-              <InstagramLink />
+              <InstagramLink href="https://www.instagram.com/laylashshayr" />
             </a>
             <a
               v-if="volunteer.email"

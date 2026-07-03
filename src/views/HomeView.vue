@@ -7,7 +7,7 @@ const show = false
   <div class="bootstrap-home" v-if="!show">
     <NavBar />
     <div class="items">
-      <TelegramLink class="soc-med" />
+      <TelegramLink href="https://t.me/+xJvGbSl6Xa9lNDZl" class="soc-med" />
 
       <h1>Layl Ash-Shayr</h1>
       <div class="catch-line"><i>Poetry under the loving gaze of the moon</i></div>

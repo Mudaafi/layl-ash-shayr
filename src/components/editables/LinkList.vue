@@ -80,6 +80,19 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
     justify-content: center;
   }
 
+  .link a:hover,
+  .link .editable-field:hover,
+  .sortable-chosen {
+    background-color: $secondary;
+    // TODO: Different editng experience
+    // border: 1px solid $primary-darker;
+    color: $primary-darker;
+    transition: 0.4s;
+    a {
+      color: black;
+    }
+  }
+
   .link {
     cursor: pointer;
     border: 1px solid $primary;
@@ -100,19 +113,6 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
       width: 100%;
       height: 100%;
       font-weight: 500;
-    }
-
-    a:hover,
-    .editable-field:hover,
-    &.sortable-chosen {
-      background-color: $secondary;
-      // TODO: Different editng experience
-      // border: 1px solid $primary-darker;
-      color: $primary-darker;
-      transition: 0.4s;
-      a {
-        color: black;
-      }
     }
 
     .editable-inputs {

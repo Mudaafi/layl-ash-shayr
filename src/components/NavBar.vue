@@ -24,11 +24,11 @@ const menuOpen = ref(false)
 
     <div class="right">
       <a href="https://www.instagram.com/laylashshayr/" target="_blank" alt="Link to Instgram">
-        <InstagramLink class="soc-med" />
+        <InstagramLink href="https://www.instagram.com/laylashshayr" class="soc-med" />
       </a>
 
       <a href="https://t.me/+PDR99nolQd5lZmY1" target="_blank" alt="Link to Instgram">
-        <TelegramLink class="soc-med" />
+        <TelegramLink href="https://www.instagram.com/laylashshayr" class="soc-med" />
       </a>
     </div>
   </nav>
