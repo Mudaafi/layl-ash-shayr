@@ -1,6 +1,7 @@
 <script setup generic="T extends BaseLink" lang="ts">
 import { EditableArea, EditableInput, EditablePreview, EditableRoot } from 'reka-ui'
-import { Move as IconMove } from '@lucide/vue'
+import { EyeClosedIcon, EyeIcon, Move as IconMove } from '@lucide/vue'
+import { Toggle } from '../ui/toggle'
 
 export interface BaseLink {
   href: string
@@ -18,41 +19,47 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
 
 <template>
   <ul class="link-list">
-    <li v-for="(item, i) in links" class="link" :key="item.href">
-      <a v-if="!editable && !item.hidden" :href="item.href">{{ item.displayText }}</a>
-      <div v-if="editable" class="edit-view">
-        <div class="flex flex-col justify-center md:mx-[12px] mx-[8px] draggable-handle">
-          <IconMove :size="isMobileWidth ? 24 : 32" />
-        </div>
-        <div class="editable-inputs">
-          <div class="editable-field">
-            <EditableRoot
-              :default-value="item.displayText"
-              placeholder="Enter text..."
-              class="flex flex-col"
-              auto-resize
-              @update:model-value="(newValue) => (links[i].displayText = newValue)"
-            >
-              <EditableArea class="font-bold">
-                <EditablePreview />
-                <EditableInput class="w-full" />
-              </EditableArea>
-            </EditableRoot>
+    <li v-for="(item, i) in links" :key="item.href">
+      <div v-if="editable || !item.hidden" class="link" :class="item.hidden ? 'is-hidden' : ''">
+        <a v-if="!editable" :href="item.href">{{ item.displayText }}</a>
+        <div v-if="editable" class="edit-view">
+          <div class="flex flex-col justify-center md:mx-[12px] mx-[8px] draggable-handle">
+            <IconMove :size="isMobileWidth ? 24 : 32" />
           </div>
-          <div class="editable-field">
-            <EditableRoot
-              :default-value="item.href"
-              placeholder="Enter text..."
-              class="flex flex-col"
-              auto-resize
-              @update:model-value="(newValue) => (links[i].href = newValue)"
-            >
-              <EditableArea class="italic">
-                <EditablePreview />
-                <EditableInput class="w-full" />
-              </EditableArea>
-            </EditableRoot>
+          <div class="editable-inputs">
+            <div class="editable-field">
+              <EditableRoot
+                :default-value="item.displayText"
+                placeholder="Enter text..."
+                class="flex flex-col"
+                auto-resize
+                @update:model-value="(newValue) => (links[i].displayText = newValue)"
+              >
+                <EditableArea class="font-bold">
+                  <EditablePreview />
+                  <EditableInput class="w-full" />
+                </EditableArea>
+              </EditableRoot>
+            </div>
+            <div class="editable-field">
+              <EditableRoot
+                :default-value="item.href"
+                placeholder="Enter text..."
+                class="flex flex-col"
+                auto-resize
+                @update:model-value="(newValue) => (links[i].href = newValue)"
+              >
+                <EditableArea class="italic">
+                  <EditablePreview />
+                  <EditableInput class="w-full" />
+                </EditableArea>
+              </EditableRoot>
+            </div>
           </div>
+          <Toggle aria-label="Toggle bold" v-model="item.hidden">
+            <EyeIcon class="h-4 w-4" v-if="!item.hidden" />
+            <EyeClosedIcon class="h-4 w-4" v-if="item.hidden" />
+          </Toggle>
         </div>
       </div>
     </li>
@@ -81,6 +88,11 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
     transition: all 0.15s ease-in;
     text-align: center;
     list-style: none;
+
+    &.is-hidden {
+      color: $primary-darker !important;
+      border-color: $primary-darker;
+    }
 
     a {
       display: block;
