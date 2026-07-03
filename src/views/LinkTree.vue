@@ -90,6 +90,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
     display: grid;
     grid-template-columns: 1fr 1fr;
     padding: 2px;
+    column-gap: 32px;
   }
 }
 
