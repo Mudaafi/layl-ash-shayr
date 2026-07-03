@@ -1,12 +1,22 @@
 <script setup lang="ts">
 import LASLogo from '@/components/LASLogo.vue'
-import LoginHeader from '@/components/LoginHeader.vue'
-import Test from '@/components/Test.vue'
-import useLinktree, { type LinkTreeItem } from '@/stores/linktree'
+import Header from '@/components/Header.vue'
+import LinkList from '@/components/editables/LinkList.vue'
+import useLinktree from '@/stores/linktree'
 import InstagramLink from '@/svgs/InstagramLink.vue'
 import TelegramLink from '@/svgs/TelegramLink.vue'
+import useEditablePage from '@/stores/editable-page'
+import { watch } from 'vue'
+import PickOneFromMany from '@/components/editables/PickOneFromMany.vue'
 
-const { links, fetchLinktree, isLoading } = useLinktree()
+const { links, subtitles, isLoading, updateLinktree } = useLinktree()
+const { isEditing } = useEditablePage()
+
+watch(isEditing, (newValue, oldValue) => {
+  if (oldValue === true && newValue === false) {
+    updateLinktree()
+  }
+})
 
 /**
  * Configs applying to specific tree items
@@ -32,12 +42,6 @@ interface LinkTreeConfigs extends ListItemConfigs {
   backgroundImage: string
 }
 
-const subtitles = [
-  'Just a group of SG Muslim lit fans, building our little community day by day',
-  'Poetry under the loving gaze of the moon'
-]
-
-const subtitle = Math.floor(Math.random() * 10) > 5 ? subtitles[0] : subtitles[1]
 const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
 </script>
 
@@ -45,13 +49,12 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
   <!-- TODO: Better Loading Screen -->
   <div v-if="isLoading" class="loading">Loading...</div>
   <div class="grid" v-if="!isLoading">
-    <LoginHeader />
+    <Header />
     <div class="header padded">
       <LASLogo class="logo" :width="!isMobileWidth ? '200px' : '100px'" />
-      <Test />
       <h1>Layl Ash Shayr</h1>
       <div class="catch-phrase">
-        <i>{{ subtitle }}</i>
+        <i><PickOneFromMany :options="subtitles" :editable="isEditing" /></i>
       </div>
 
       <div class="social-media">
@@ -59,11 +62,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
         <TelegramLink href="https://t.me/+xJvGbSl6Xa9lNDZl" class="soc-med" />
       </div>
     </div>
-    <ul class="linktree">
-      <li v-for="item in links" class="link">
-        <a :href="item.href">{{ item.displayText }}</a>
-      </li>
-    </ul>
+    <link-list :links="links" :editable="isEditing" />
   </div>
 </template>
 
@@ -123,8 +122,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
     }
   }
 
-  h1,
-  div {
+  h1 {
     color: $secondary;
   }
 
@@ -133,44 +131,6 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
     font-style: italics;
     line-height: 1;
     margin-top: 8px;
-  }
-}
-
-.linktree {
-  display: flex;
-  flex-direction: column;
-  row-gap: 14px;
-
-  @media (min-width: $desktop-width) {
-    row-gap: 16px;
-    justify-content: center;
-  }
-
-  .link {
-    cursor: pointer;
-    border: 1px solid $primary;
-    border-radius: 8px;
-    padding: 4px;
-    transition: all 0.15s ease-in;
-    text-align: center;
-    list-style: none;
-
-    &:hover {
-      background-color: $secondary;
-      border: 1px solid $primary-darker;
-      color: $primary-darker;
-      a {
-        color: black;
-      }
-    }
-
-    & a {
-      display: block;
-      padding: 10px 14px;
-      width: 100%;
-      height: 100%;
-      font-weight: 500;
-    }
   }
 }
 </style>

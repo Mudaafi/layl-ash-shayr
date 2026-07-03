@@ -31,7 +31,7 @@ async function onGoogleAuth(response: any) {
   // console.log('  Email: ' + responsePayload.email)
   // console.log('🚀 ~ onGoogleAuth ~ credential:', responsePayload)
 
-  const { auth, app } = useFiretore()
+  const { auth } = useFiretore()
   const googleCreds = GoogleAuthProvider.credential(response.credential)
   const user = await signInWithCredential(auth.value, googleCreds)
 
@@ -45,8 +45,7 @@ const initSignIn = () => {
 
   window.google.accounts.id.initialize({
     client_id: '396637985943-ellr423lfd5j0krsad9phhta1t6go9cp.apps.googleusercontent.com',
-    callback: onGoogleAuth,
-    cancel_on_tap_outside: false
+    callback: onGoogleAuth
   })
 
   window.google.accounts.id.renderButton(btnElem, {

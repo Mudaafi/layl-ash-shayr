@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useColorMode } from '@vueuse/core'
 import { RouterView } from 'vue-router'
+import 'vue-sonner/style.css'
+import { Toaster } from '@/components/ui/sonner'
 
 const mode = useColorMode()
 mode.value = 'dark'
@@ -10,6 +12,7 @@ mode.value = 'dark'
   <!-- <Header /> -->
   <RouterView />
   <!-- <Footer /> -->
+  <Toaster position="top-right" />
 </template>
 
 <style scoped>

@@ -13,11 +13,14 @@ import GoogleSignIn from './GoogleSignIn.vue'
 import { ref } from 'vue'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import useFirestore from '@/stores/firestore'
+import Edit from './EditButton.vue'
 
 const isOpen = ref(false)
 function closeDialog() {
   isOpen.value = false
 }
+
+const { isAdmin } = useFirestore()
 </script>
 
 <template>
@@ -25,9 +28,12 @@ function closeDialog() {
     <div class="header">
       <div></div>
 
-      <AlertDialogTrigger as-child>
-        <button><SecretBook class="icon" /></button>
-      </AlertDialogTrigger>
+      <div class="flex">
+        <Edit v-if="isAdmin" />
+        <AlertDialogTrigger as-child>
+          <button><SecretBook class="icon" /></button>
+        </AlertDialogTrigger>
+      </div>
     </div>
 
     <AlertDialogContent @on-overlay-click="closeDialog">
