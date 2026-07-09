@@ -1,3 +1,6 @@
+@use './sizes.scss' as *;
+@use './colors.scss' as *;
+
 #app {
   padding: 0;
   margin: 0 auto;
@@ -11,14 +14,14 @@
 body {
   // Typography
   background-color: $bg;
-  font-family: Volkorn;
+  font-family: Vollkorn;
   color: $primary-text;
   display: flex;
 
   h1 {
-    font-size: 22px;
+    font-size: 32px;
     line-height: 1;
-    font-family: 'Volkorn';
+    font-family: 'Vollkorn';
     font-weight: 700;
     color: $primary-text-emphasis;
   }
@@ -30,7 +33,7 @@ body {
   }
   p {
     font-size: 16px;
-    font-family: 'Volkorn';
+    font-family: 'Vollkorn';
     font-style: normal;
   }
   ul {

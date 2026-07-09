@@ -16,7 +16,7 @@ const props = defineProps<{
     <div class="poet-bio" v-if="props.poetBio">{{ props.poetBio }}</div>
     <div class="social-media">
       <a v-if="instagramLink" :href="instagramLink" target="_blank" rel="noopener noreferrer">
-        <InstagramLink />
+        <InstagramLink href="https://www.instagram.com/laylashshayr" />
       </a>
       <a v-if="genericLink" :href="genericLink" target="_blank" rel="noopener noreferrer">
         <!-- <GenericLink /> -->
