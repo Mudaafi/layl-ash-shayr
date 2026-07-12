@@ -1,7 +1,17 @@
 <script setup generic="T extends BaseLink" lang="ts">
+import { reactive, ref } from 'vue'
 import { EditableArea, EditableInput, EditablePreview, EditableRoot } from 'reka-ui'
-import { EyeClosedIcon, EyeIcon, Move as IconMove } from '@lucide/vue'
+import { EyeClosedIcon, EyeIcon, Move as IconMove, PlusIcon, Trash2Icon } from '@lucide/vue'
 import { Toggle } from '../ui/toggle'
+import { Button } from '../ui/button'
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogCancel,
+  AlertDialogAction
+} from '../ui/alert-dialog/'
 
 export interface BaseLink {
   href: string
@@ -15,6 +25,28 @@ const { links, editable } = defineProps<{
 }>()
 
 const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
+const isDeletePromptOpen = ref(false)
+const deletePromptData = reactive({
+  displayText: '',
+  index: -1
+})
+
+function openDeletePrompt(displayText: string, index: number) {
+  deletePromptData.displayText = displayText
+  deletePromptData.index = index
+  isDeletePromptOpen.value = true
+}
+
+function closeDeletePrompt() {
+  isDeletePromptOpen.value = false
+}
+
+function addLink() {
+  links.push({
+    href: `${links.length}`,
+    displayText: ''
+  } as T)
+}
 </script>
 
 <template>
@@ -56,14 +88,52 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
               </EditableRoot>
             </div>
           </div>
-          <Toggle aria-label="Toggle bold" v-model="item.hidden">
-            <EyeIcon class="h-4 w-4" v-if="!item.hidden" />
-            <EyeClosedIcon class="h-4 w-4" v-if="item.hidden" />
-          </Toggle>
+          <div class="flex flex-col justify-between">
+            <Toggle aria-label="Toggle bold" v-model="item.hidden" class="cursor-pointer">
+              <EyeIcon class="h-4 w-4" v-if="!item.hidden" />
+              <EyeClosedIcon class="h-4 w-4" v-if="item.hidden" />
+            </Toggle>
+
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Delete"
+              class="dark:hover:text-red-500 cursor-pointer w-full"
+              @click="openDeletePrompt(item.displayText, i)"
+            >
+              <Trash2Icon />
+            </Button>
+          </div>
         </div>
       </div>
     </li>
+    <div class="link link-add" v-if="editable" @click="addLink()">
+      <PlusIcon></PlusIcon>
+    </div>
   </ul>
+
+  <AlertDialog v-model:open="isDeletePromptOpen">
+    <AlertDialogContent @on-overlay-click="closeDeletePrompt()">
+      <AlertDialogHeader>
+        <AlertDialogTitle class="text-center alert-content"
+          >Delete "<span class="italic">{{ deletePromptData.displayText }}"</span
+          >?</AlertDialogTitle
+        >
+
+        <AlertDialogDescription> This action cannot be undone. </AlertDialogDescription>
+      </AlertDialogHeader>
+
+      <AlertDialogFooter class="flex flex-row justify-between">
+        <AlertDialogCancel class="cursor-pointer">Cancel</AlertDialogCancel>
+        <AlertDialogAction
+          class="bg-red-400 hover:bg-red-500 cursor-pointer"
+          @click="links.splice(deletePromptData.index, 1)"
+        >
+          Delete
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
 </template>
 
 <style lang="scss" scoped>
@@ -124,11 +194,26 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
         cursor: text;
       }
     }
+
+    &.link-add {
+      border: 2px dashed $primary-darker;
+      color: $primary-darker;
+      display: flex;
+      justify-content: center;
+      &:hover {
+        border: 2px dashed $primary;
+        color: $secondary-lighter;
+      }
+    }
   }
 
   .edit-view {
     display: flex;
     flex-direction: row;
   }
+}
+
+.alert-content {
+  color: $alert;
 }
 </style>
