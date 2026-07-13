@@ -10,7 +10,7 @@ import { watch } from 'vue'
 import PickOneFromMany from '@/components/editables/PickOneFromMany.vue'
 import { VueDraggable } from 'vue-draggable-plus'
 
-const { links, subtitles, isLoading, updateLinktree } = useLinktree()
+const { links, subtitles, isLoading, updateLinktree, userCount, userPosition } = useLinktree()
 const { isEditing } = useEditablePage()
 
 watch(isEditing, (newValue, oldValue) => {
@@ -49,31 +49,34 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
 <template>
   <!-- TODO: Better Loading Screen -->
   <div v-if="isLoading" class="loading">Loading...</div>
-  <div class="grid" v-if="!isLoading">
-    <Header />
-    <div class="header padded">
-      <LASLogo class="logo" :width="!isMobileWidth ? '200px' : '100px'" />
-      <h1>Layl Ash Shayr</h1>
-      <div class="catch-phrase">
-        <i><PickOneFromMany :options="subtitles" :editable="isEditing" /></i>
+  <div class="flex flex-col justify-between h-full">
+    <div class="grid" v-if="!isLoading">
+      <Header />
+      <div class="header padded">
+        <LASLogo class="logo" :width="!isMobileWidth ? '200px' : '100px'" />
+        <h1>Layl Ash Shayr</h1>
+        <div class="catch-phrase">
+          <i><PickOneFromMany :options="subtitles" :editable="isEditing" /></i>
+        </div>
+
+        <div class="social-media">
+          <InstagramLink href="https://www.instagram.com/laylashshayr" class="soc-med" />
+          <TelegramLink href="https://t.me/+xJvGbSl6Xa9lNDZl" class="soc-med" />
+        </div>
       </div>
 
-      <div class="social-media">
-        <InstagramLink href="https://www.instagram.com/laylashshayr" class="soc-med" />
-        <TelegramLink href="https://t.me/+xJvGbSl6Xa9lNDZl" class="soc-med" />
-      </div>
+      <VueDraggable
+        v-model="links"
+        target=".link-list"
+        draggable="li"
+        class="draggable-link-list"
+        :disabled="!isEditing"
+        handle=".draggable-handle"
+      >
+        <link-list :links="links" :editable="isEditing" />
+      </VueDraggable>
     </div>
-
-    <VueDraggable
-      v-model="links"
-      target=".link-list"
-      draggable="li"
-      class="draggable-link-list"
-      :disabled="!isEditing"
-      handle=".draggable-handle"
-    >
-      <link-list :links="links" :editable="isEditing" />
-    </VueDraggable>
+    <footer class="text-center">Total Visitors: {{ userCount }}</footer>
   </div>
 </template>
 
@@ -128,7 +131,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
     flex-direction: column;
 
     @media (min-width: $desktop-width) {
-      height: 100dvh;
+      height: 90dvh;
       justify-content: center;
       padding: 0 4vw;
     }

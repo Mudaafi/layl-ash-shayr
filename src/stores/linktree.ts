@@ -6,9 +6,11 @@ import {
   type DocumentData,
   type QueryDocumentSnapshot,
   type FirestoreDataConverter,
-  setDoc
+  setDoc,
+  runTransaction
 } from 'firebase/firestore/lite'
-import { computed } from 'vue'
+import { onSnapshot, doc as document, getFirestore } from 'firebase/firestore'
+import { computed, ref } from 'vue'
 import { toast } from 'vue-sonner'
 
 /**
@@ -29,6 +31,8 @@ export default function useLinktree() {
   const links = useStorage<Array<LinkTreeItem>>('linktree-links', [], sessionStorage)
   const subtitles = useStorage<Array<string>>('linktree-subtitles', [], sessionStorage)
   const socialMedia = useStorage<Array<SocialMediaItem>>('linktree-socialMedia', [], sessionStorage)
+  const userPosition = useStorage<number>('linktree-user-position', -1, localStorage)
+  const userCount = ref(-1)
   const isLoading = computed(() => links.value.length === 0)
 
   async function fetchLinktree() {
@@ -64,13 +68,34 @@ export default function useLinktree() {
     )
   }
 
+  const db = getFirestore(firestore.value.app, 'laylashshayr')
+  onSnapshot(
+    document(db, 'website', 'linktree', 'metadata', 'userCount'),
+    (snap) => (userCount.value = snap.data()?.count)
+  )
+
+  console.log(userPosition.value)
+  if (!userPosition.value || userPosition.value < 0) {
+    const docPath = doc(firestore.value, 'website', 'linktree', 'metadata', 'userCount')
+    runTransaction(firestore.value, (transaction) => {
+      return transaction.get(docPath).then((doc) => {
+        const serverUserCount = doc.data()?.count
+
+        userPosition.value = serverUserCount + 1
+        return transaction.set(docPath, { count: serverUserCount + 1 })
+      })
+    })
+  }
+
   return {
     links,
     socialMedia,
     subtitles,
     isLoading,
     fetchLinktree,
-    updateLinktree
+    updateLinktree,
+    userCount,
+    userPosition
   }
 }
 
