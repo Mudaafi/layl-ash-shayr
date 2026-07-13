@@ -53,7 +53,7 @@ const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches
     <Header />
     <div class="header padded">
       <LASLogo class="logo" :width="!isMobileWidth ? '200px' : '100px'" />
-      <h1>Layl Ash Shayr</h1>
+      <h1>Layl Ash-Shayr</h1>
       <div class="catch-phrase">
         <i><PickOneFromMany :options="subtitles" :editable="isEditing" /></i>
       </div>
