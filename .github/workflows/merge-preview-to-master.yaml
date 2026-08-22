@@ -30,7 +30,8 @@ jobs:
         run: |
           git checkout master
           git pull
-          git merge preview -m "GHA - Merge preview to master"
+          git merge preview
+          git commit -m "GHA - Merge preview to master"
 
       - name: Update 'preview' branch to prevent PR from closing
         run: |
