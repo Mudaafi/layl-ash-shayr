@@ -1,0 +1,18 @@
+# .github/workflows/auto-merge.yaml
+name: Merge Preview to Master
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to merge to master'
+        required: true
+        default: 'preview'
+        type: string
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: test echo
+        run: echo "${{inputs.branch}}"
