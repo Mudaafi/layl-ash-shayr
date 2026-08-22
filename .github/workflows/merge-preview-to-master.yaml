@@ -21,6 +21,11 @@ jobs:
           # Possible optimization here: target fetch to only master
           fetch-depth: 0
 
+      - name: Git config
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Actions"
+
       - name: Merge preview into master locally
         run: |
           git checkout master
