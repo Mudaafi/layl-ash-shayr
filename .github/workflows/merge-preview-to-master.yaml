@@ -31,7 +31,7 @@ jobs:
       - name: test merge
         run: |
           echo "attempting merge"
-          git fetch origin master
+          git fetch origin master:master
           git checkout master
           git pull
           git merge preview -m "GHA - Merge preview to master"
