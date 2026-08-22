@@ -13,6 +13,19 @@ jobs:
   merge:
     runs-on: ubuntu-latest
     steps:
+      - name: Only run on preview
+        if: github.ref_name == 'preview'
+        run: |
+          echo "ERROR: This manual workflow can only be run from the 'preview' branch."
+          exit 1
+
       - uses: actions/checkout@v4
+
       - name: test echo
-        run: echo "${{inputs.branch}}"
+        run: |
+          echo "${{inputs.branch}}"
+
+      - name: test merge
+        run: |
+          echo "attempting merge"
+          git branch
