@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Only run on preview
-        if: github.ref_name == 'preview'
+        if: github.ref_name != 'preview'
         run: |
           echo "ERROR: This manual workflow can only be run from the 'preview' branch."
           exit 1
