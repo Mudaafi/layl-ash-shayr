@@ -23,15 +23,16 @@ jobs:
           exit 1
 
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: test echo
         run: |
-          echo "${{inputs.branch}}"
+          echo "${{github.ref_name}}"
 
       - name: test merge
         run: |
           echo "attempting merge"
-          git fetch origin master:master
           git checkout master
           git pull
           git merge preview -m "GHA - Merge preview to master"
