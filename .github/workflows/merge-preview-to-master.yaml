@@ -5,12 +5,6 @@ permissions:
 
 on:
   workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to merge to master'
-        required: true
-        default: 'preview'
-        type: string
 
 jobs:
   merge:
@@ -26,14 +20,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: test echo
+      - name: merge preview into master locally
         run: |
-          echo "${{github.ref_name}}"
-
-      - name: test merge
-        run: |
-          echo "attempting merge"
           git checkout master
           git pull
           git merge preview -m "GHA - Merge preview to master"
+
+      - name: update preview to prevent PR from closing
+        run: |
+          git checkout preview
+          echo $RANDOM > random.txt
+          git add *
+          git commit -m "GHA - Update preview branch"
+          git push
+
+      - name: push merge
+        run: |
+          git checkout master
           git push
