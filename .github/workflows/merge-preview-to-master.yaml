@@ -1,5 +1,8 @@
 # .github/workflows/auto-merge.yaml
 name: Merge Preview to Master
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
     inputs:
@@ -28,7 +31,7 @@ jobs:
       - name: test merge
         run: |
           echo "attempting merge"
-          git fetch --unshallow
+          git fetch origin master
           git checkout master
           git pull
           git merge preview -m "GHA - Merge preview to master"
