@@ -28,6 +28,8 @@ jobs:
       - name: test merge
         run: |
           echo "attempting merge"
+          git fetch --unshallow
           git checkout master
           git pull
-          git merge preview
+          git merge preview -m "GHA - Merge preview to master"
+          git push
