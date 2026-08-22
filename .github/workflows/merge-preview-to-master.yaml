@@ -28,7 +28,6 @@ jobs:
 
       - name: Merge preview into master locally
         run: |
-          git pull origin preview
           git merge preview -m "GHA - Merge preview to master"
 
       - name: Update 'preview' branch to prevent PR from closing
