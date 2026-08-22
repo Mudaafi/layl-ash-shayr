@@ -18,15 +18,16 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
+          # Possible optimization here: target fetch to only master
           fetch-depth: 0
 
-      - name: merge preview into master locally
+      - name: Merge preview into master locally
         run: |
           git checkout master
           git pull
           git merge preview -m "GHA - Merge preview to master"
 
-      - name: update preview to prevent PR from closing
+      - name: Update 'preview' branch to prevent PR from closing
         run: |
           git checkout preview
           echo $RANDOM > random.txt
@@ -34,7 +35,7 @@ jobs:
           git commit -m "GHA - Update preview branch"
           git push
 
-      - name: push merge
+      - name: Push merge to master
         run: |
           git checkout master
           git push
