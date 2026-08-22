@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Only run on preview
-        if: github.ref_name != 'preview'
+        if: github.ref_name != 'master'
         run: |
-          echo "ERROR: This manual workflow can only be run from the 'preview' branch."
+          echo "ERROR: This manual workflow can only be run from the 'master' branch."
           exit 1
 
       - uses: actions/checkout@v4
@@ -28,8 +28,7 @@ jobs:
 
       - name: Merge preview into master locally
         run: |
-          git checkout master
-          git pull
+          git pull origin preview
           git merge preview -m "GHA - Merge preview to master"
 
       - name: Update 'preview' branch to prevent PR from closing
