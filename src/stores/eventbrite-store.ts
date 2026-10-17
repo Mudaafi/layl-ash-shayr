@@ -1,28 +1,26 @@
 import { ref } from 'vue'
 import { type Event, type Attendee } from '../../types'
 import { createClient } from '@supabase/supabase-js'
-import { onAuthStateChanged } from 'firebase/auth'
 import { useStorage } from '@vueuse/core'
 
 const BASE_URL = import.meta.env.VITE_FN_EVENTBRITE_URL
+const attendees = ref<Array<Attendee>>()
+const events = useStorage<Array<Event>>('events', [], localStorage)
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+  {
+    accessToken: async () => {
+      const jwt = (await cookieStore.get('google'))?.value
+
+      return jwt || null
+    }
+  }
+)
 
 export default function useEventbrite() {
-  const attendees = ref<Array<Attendee>>()
-  const events = useStorage<Array<Event>>('events', [], localStorage)
-
   async function fetchAttendees(eventId: string) {
-    const supabase = createClient(
-      import.meta.env.VITE_SUPABASE_URL,
-      import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-      {
-        accessToken: async () => {
-          const jwt = (await cookieStore.get('google'))?.value
-
-          return jwt || null
-        }
-      }
-    )
-
     const res = await supabase.from('event_attendees').select().eq('eventId', eventId)
     const fetchedAttendees = (res.data as Array<Attendee>) || attendees.value
     const attendeesMap: { [orderId: string]: Attendee } = {}
@@ -61,10 +59,24 @@ export default function useEventbrite() {
     )
   }
 
+  async function toggleCheckInAttendee(attendeeId: string) {
+    console.log('🚀 ~ toggleCheckInAttendee ~ attendees:', attendees.value)
+    const attendee = attendees.value?.find((x) => x.attendeeId === attendeeId)
+
+    if (!attendee) return
+    attendee.checkedIn = !attendee.checkedIn
+
+    await supabase
+      .from('event_attendees')
+      .update({ checkedIn: attendee.checkedIn })
+      .eq('attendeeId', attendee.attendeeId)
+  }
+
   return {
     events,
     fetchEvents,
     attendees,
-    fetchAttendees
+    fetchAttendees,
+    toggleCheckInAttendee
   }
 }

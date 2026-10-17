@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="TData extends RowData">
+<script setup lang="ts">
 import { computed } from 'vue'
 import type { ColumnDef, RowData } from '@tanstack/vue-table'
 import { FlexRender, useTable } from '@tanstack/vue-table'
@@ -17,8 +17,8 @@ import type { Attendee } from '../../../types'
 import { getQuestions } from './helpers'
 
 const props = defineProps<{
-  columns: ColumnDef<DataTableFeatures, TData>[]
-  data: TData[]
+  columns: ColumnDef<DataTableFeatures, Attendee>[]
+  data: Attendee[]
 }>()
 
 const table = useTable({
@@ -57,13 +57,17 @@ table.setPageSize(60)
               :data-state="row.getIsSelected() && 'selected'"
               @click="() => row.toggleExpanded()"
             >
-              <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
+              <TableCell
+                v-for="cell in row.getVisibleCells()"
+                :key="cell.id"
+                :class="(row.original as Attendee).checkedIn ? 'checked-in' :''"
+              >
                 <FlexRender :cell="cell" />
               </TableCell>
             </TableRow>
-            <TableRow v-if="row.getIsExpanded()">
+            <TableRow v-if="row.getIsExpanded() && getQuestions(row.original).length > 0">
               <TableCell :colspan="row.getAllCells().length">
-                <div class="p-4" v-for="entry in getQuestions(row.original as Attendee)">
+                <div class="p-4" v-for="entry in getQuestions(row.original)">
                   <div class="font-bold italic">{{ entry[0] }}</div>
                   <div>{{ entry[1] }}</div>
                 </div>
@@ -80,3 +84,11 @@ table.setPageSize(60)
     </Table>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.checked-in {
+  color: grey;
+  font-style: italic;
+  text-decoration: line-through;
+}
+</style>

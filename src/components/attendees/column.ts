@@ -4,11 +4,17 @@ import { createColumnHelper } from '@tanstack/vue-table'
 import type { DataTableFeatures } from './features'
 import type { Attendee } from '../../../types'
 import SortableHeader from './SortableHeader.vue'
+import AttendeeCheckbox from './AttendeeCheckbox.vue'
 
 // Use `accessor` for data columns and `display` for columns without one.
 const columnHelper = createColumnHelper<DataTableFeatures, Attendee>()
 
 export const columns = columnHelper.columns([
+  columnHelper.display({
+    id: 'check',
+    cell: ({ row }) => h(AttendeeCheckbox, { attendeeId: row.original.attendeeId })
+  }),
+
   columnHelper.accessor('orderId', {
     header: ({ column }) => h(SortableHeader, { name: 'Order Id', column })
   }),
