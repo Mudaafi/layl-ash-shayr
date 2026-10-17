@@ -1,15 +1,17 @@
-import { HandlerResponse } from '@netlify/functions'
+import type { HandlerResponse } from '@netlify/functions'
 
 export interface Attendee {
   quantity: number
   basePrice: number
-  id: string
   name: string
   email: string
   barcodes: Array<string>
   checkedIn: boolean
   ticketType: 'Open Miccer' | 'Waitlist' | 'General' | 'Supporter'
   orderId: string
+  userId?: string // user id not provided by eventbrite/events/*/attendees
+  attendeeId: string
+  eventId: string
 }
 
 export interface OpenMiccer extends Attendee {
@@ -22,6 +24,16 @@ export interface OpenMiccer extends Attendee {
   isEnglishPerformance: boolean
   isTactful: true | false | 'unsure'
   isFirstTimer: boolean
+}
+
+export interface Event {
+  capacity: number
+  attendeeCount?: number
+  description: string
+  id: string
+  name: string
+  url: string
+  datetime: number
 }
 
 export class ServerError extends Error {

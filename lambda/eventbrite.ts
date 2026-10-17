@@ -1,9 +1,15 @@
-import { Handler, HandlerResponse } from '@netlify/functions'
+import { Handler } from '@netlify/functions'
 import { parseCookie } from 'cookie'
 import { initializeApp } from 'firebase-admin'
 import { getAuth } from 'firebase-admin/auth'
 import { ServerError } from '../types'
-import { getAttendeesFromEventbrite } from './lib/eventbrite-api'
+import {
+  getAttendeeFromEventByAttendeeId,
+  getAttendeesFromEventbrite,
+  getEventsFromEventbrite
+} from './lib/eventbrite-api'
+import { WebhookPayload } from './lib/eventbrite-api-types'
+import { addAttendeesToSupabase } from './lib/supabase-api'
 
 export const handler: Handler = async (event, context) => {
   const eventbriteToken = process.env.EVENTBRITE_TOK || ''
@@ -16,18 +22,62 @@ export const handler: Handler = async (event, context) => {
 
     if (apiPath === 'eventbrite') {
       return { statusCode: 200, body: JSON.stringify({ message: 'Success' }) }
+    } else if (apiPath === 'eventbrite/webhook_on_attendee_updated') {
+      if (!event.body) throw new ServerError({ message: 'event.body is malformed' })
+
+      const body = JSON.parse(event.body) as WebhookPayload
+      // https://www.eventbriteapi.com/v3/events/2003257008639/attendees/22871317754/
+      const eventId =
+        /https:\/\/www.eventbriteapi.com\/v3\/events\/([0-9]+)\/attendees\/[0-9]+\//.exec(
+          body.api_url
+        )?.[1]
+      const attendeeId =
+        /https:\/\/www.eventbriteapi.com\/v3\/events\/[0-9]+\/attendees\/([0-9]+)\//.exec(
+          body.api_url
+        )?.[1]
+
+      if (!eventId || !attendeeId)
+        throw new ServerError({ message: 'eventbrite api_url missing fields' })
+      const attendee = await getAttendeeFromEventByAttendeeId(eventbriteToken, eventId, attendeeId)
+      attendee.userId = body.config.user_id
+
+      //TODO: update telegram bot
+
+      // update supabase
+      await addAttendeesToSupabase(attendee)
+    } else if (/eventbrite\/events\/[a-zA-Z0-9]+\/sync/.test(apiPath)) {
+      const eventId = /eventbrite\/events\/([a-zA-Z0-9]+)\/sync/.exec(apiPath)?.[1]
+
+      if (eventId) {
+        const attendees = await getAttendeesFromEventbrite(eventbriteToken, eventId)
+        const res = await addAttendeesToSupabase(attendees)
+
+        if (res.error) {
+          throw new ServerError({ status: res.status, message: res.error })
+        }
+
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ message: `Sync of attendees from event ${eventId} complete` })
+        }
+      }
     } else if (/eventbrite\/events\/[a-zA-Z0-9]+\/attendees/.test(apiPath)) {
       const eventId = /eventbrite\/events\/([a-zA-Z0-9]+)\/attendees/.exec(apiPath)?.[1]
       if (eventId) {
         const attendees = await getAttendeesFromEventbrite(eventbriteToken, eventId)
 
         return { statusCode: 200, body: JSON.stringify(attendees) }
-      } else {
-        throw new ServerError({ statusCode: 400, message: 'Error getting event id' })
       }
+
+      throw new ServerError({ statusCode: 400, message: 'Error getting event id' })
+    } else if (apiPath === 'eventbrite/events') {
+      const events = await getEventsFromEventbrite(eventbriteToken)
+
+      return { statusCode: 200, body: JSON.stringify(events) }
     }
   } catch (err) {
     const serverError = err as ServerError
+
     if (serverError.serverResponse) return serverError.serverResponse
     console.log(err)
   }
@@ -43,12 +93,19 @@ export const handler: Handler = async (event, context) => {
 async function validateCall(requiredVariables: any) {
   const cookieString = requiredVariables.event.headers.cookie || ''
   const googleIdToken = parseCookie(cookieString)['google'] || ''
+  const paths = requiredVariables.event.path.split('/')
+  const apiPath = paths.slice(paths.indexOf('eventbrite')).join('/')
 
   if (!requiredVariables.eventbriteToken || !googleIdToken) {
     throw new ServerError({
       statusCode: 500,
       message: "Server doesn't have the required credentials."
     })
+  }
+
+  if (apiPath === 'eventbrite/on_attendee_updated') {
+    // Damn it eventbrite
+    return true
   }
 
   const firestoreApp = initializeApp({

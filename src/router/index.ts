@@ -15,6 +15,17 @@ const router = createRouter({
       component: LinkTree
     },
     {
+      path: '/events/:eventId',
+      name: 'events',
+      component: () => import('../views/EventsView.vue'),
+      props: true
+    },
+    {
+      path: '/events',
+      name: 'events-list',
+      component: () => import('../views/EventsListView.vue')
+    },
+    {
       path: '/poetry',
       component: () => import('../components/PoemsList.vue')
     },

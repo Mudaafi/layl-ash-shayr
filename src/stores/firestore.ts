@@ -25,6 +25,7 @@ const auth = computed(() => {
 
 onAuthStateChanged(auth.value, async () => {
   const currentIdTokenResult = await auth.value.currentUser?.getIdTokenResult()
+
   if (currentIdTokenResult?.token) cookieStore.set('google', currentIdTokenResult?.token)
   isAdmin.value = currentIdTokenResult?.claims?.admin === true
 })
