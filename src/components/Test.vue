@@ -7,7 +7,6 @@ const { app, firestore, auth } = useFiretore()
 async function onClick() {
   console.log('test')
   const currentUser = auth.value.currentUser
-  console.log('🚀 ~ onClick ~ currentUser:', currentUser)
   console.log(currentUser?.toJSON())
   console.log(await currentUser?.getIdTokenResult())
 }

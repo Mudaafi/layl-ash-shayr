@@ -34,3 +34,4 @@ coverage
 # Socrates
 .local
 client_secret_*
+*-firebase-*

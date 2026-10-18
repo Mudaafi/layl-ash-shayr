@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import IconEdit from './icons/IconEdit.vue'
+import { EditIcon } from '@lucide/vue'
 import IconSave from './icons/IconSave.vue'
 import useEditablePage from '@/stores/editable-page.js'
 
@@ -20,7 +20,7 @@ const { isEditing, isEditablePage } = useEditablePage(true)
       }
     "
   >
-    <IconEdit class="icon" />
+    <EditIcon class="icon" />
   </button>
   <button
     v-else-if="isEditablePage"
@@ -42,12 +42,13 @@ button {
   padding: 0;
   cursor: pointer;
   .icon {
-    width: 32px;
+    width: 24px;
+    height: 24px;
     margin: 0;
-    fill: #fff;
-    transition: fill 0.175s ease-in;
+    transition: stroke 0.175s ease-in;
+    stroke-width: 1px;
     &:hover {
-      fill: $secondary;
+      stroke: $secondary;
     }
   }
 }

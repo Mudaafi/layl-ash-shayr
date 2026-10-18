@@ -11,10 +11,11 @@ import {
 import SecretBook from '@/svgs/SecretBook.vue'
 import GoogleSignIn from './GoogleSignIn.vue'
 import { ref } from 'vue'
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import useFirestore from '@/stores/firestore'
 import Edit from './EditButton.vue'
+import { CalendarRangeIcon, ScrollTextIcon } from '@lucide/vue'
 
+const isBookHovered = ref(false)
 const isOpen = ref(false)
 function closeDialog() {
   isOpen.value = false
@@ -28,10 +29,25 @@ const { isAdmin } = useFirestore()
     <div class="header">
       <div></div>
 
-      <div class="flex">
+      <div class="flex gap-2 justify-center items-end">
         <Edit v-if="isAdmin" />
+        <RouterLink v-if="$route.name !== 'linktree'" :to="{ name: 'linktree' }" class="icon">
+          <ScrollTextIcon class="icon-svg" />
+        </RouterLink>
+        <RouterLink
+          v-if="isAdmin && $route.name !== 'events-list'"
+          :to="{ name: 'events-list' }"
+          class="icon"
+        >
+          <CalendarRangeIcon class="icon-svg" />
+        </RouterLink>
         <AlertDialogTrigger as-child>
-          <button><SecretBook class="icon" /></button>
+          <button
+            @mouseenter="() => (isBookHovered = true)"
+            @mouseleave="() => (isBookHovered = false)"
+          >
+            <SecretBook :is-opened="isAdmin" :is-hovered="isBookHovered" class="icon" />
+          </button>
         </AlertDialogTrigger>
       </div>
     </div>
@@ -75,14 +91,23 @@ const { isAdmin } = useFirestore()
     padding: 0;
     cursor: pointer;
     .icon {
-      width: 32px;
+      width: 24px;
+      height: 24px;
       margin: 0;
-      fill: #fff;
       transition: fill 0.175s ease-in;
-      &:hover {
-        fill: $secondary;
-      }
     }
+  }
+}
+
+.icon-svg {
+  stroke: white;
+  transition: stroke 0.1s ease-in;
+  width: 24px;
+  height: 24px;
+  stroke-width: 1px;
+
+  &:hover {
+    stroke: $secondary;
   }
 }
 </style>
