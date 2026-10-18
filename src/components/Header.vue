@@ -11,10 +11,10 @@ import {
 import SecretBook from '@/svgs/SecretBook.vue'
 import GoogleSignIn from './GoogleSignIn.vue'
 import { ref } from 'vue'
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import useFirestore from '@/stores/firestore'
 import Edit from './EditButton.vue'
 
+const isBookHovered = ref(false)
 const isOpen = ref(false)
 function closeDialog() {
   isOpen.value = false
@@ -31,7 +31,12 @@ const { isAdmin } = useFirestore()
       <div class="flex">
         <Edit v-if="isAdmin" />
         <AlertDialogTrigger as-child>
-          <button><SecretBook class="icon" /></button>
+          <button
+            @mouseenter="() => (isBookHovered = true)"
+            @mouseleave="() => (isBookHovered = false)"
+          >
+            <SecretBook :is-opened="isAdmin" :is-hovered="isBookHovered" class="icon" />
+          </button>
         </AlertDialogTrigger>
       </div>
     </div>
@@ -77,11 +82,7 @@ const { isAdmin } = useFirestore()
     .icon {
       width: 32px;
       margin: 0;
-      fill: #fff;
       transition: fill 0.175s ease-in;
-      &:hover {
-        fill: $secondary;
-      }
     }
   }
 }

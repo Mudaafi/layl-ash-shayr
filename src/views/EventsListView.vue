@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import LinkList, { type BaseLink } from '@/components/editables/LinkList.vue'
+import Header from '@/components/Header.vue'
 import useEventbrite from '@/stores/eventbrite-store'
 import { computed } from 'vue'
 
@@ -18,9 +19,16 @@ fetchEvents()
 </script>
 
 <template>
-  <div>Events!</div>
+  <Header />
+  <div>
+    <h1 class="heading my-10 justify-center text-center">Events!</h1>
 
-  <LinkList :links="links" />
+    <LinkList :links="links" />
+  </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+h1.heading {
+  color: $secondary;
+}
+</style>
