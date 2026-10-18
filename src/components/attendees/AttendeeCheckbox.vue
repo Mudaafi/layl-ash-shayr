@@ -17,12 +17,11 @@ function onClick(ev: MouseEvent) {
   ev.stopPropagation()
 
   toggleCheckInAttendee(attendeeId)
-  console.log('🚀 ~ onClick ~ attendeeId:', attendeeId)
 }
 </script>
 
 <template>
-  <Checkbox @click="onClick" :default-value="checkedIn" />
+  <Checkbox @click="onClick" :default-value="checkedIn" :key="attendeeId" />
 </template>
 
 <style lang="scss" scoped></style>

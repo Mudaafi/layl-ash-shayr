@@ -2,9 +2,10 @@ import { ref } from 'vue'
 import { type Event, type Attendee } from '../../types'
 import { createClient } from '@supabase/supabase-js'
 import { useStorage } from '@vueuse/core'
+import { toast } from 'vue-sonner'
 
 const BASE_URL = import.meta.env.VITE_FN_EVENTBRITE_URL
-const attendees = ref<Array<Attendee>>()
+const attendees = ref<Array<Attendee>>([])
 const events = useStorage<Array<Event>>('events', [], localStorage)
 
 const supabase = createClient(
@@ -60,7 +61,6 @@ export default function useEventbrite() {
   }
 
   async function toggleCheckInAttendee(attendeeId: string) {
-    console.log('🚀 ~ toggleCheckInAttendee ~ attendees:', attendees.value)
     const attendee = attendees.value?.find((x) => x.attendeeId === attendeeId)
 
     if (!attendee) return
@@ -72,11 +72,28 @@ export default function useEventbrite() {
       .eq('attendeeId', attendee.attendeeId)
   }
 
+  async function insertWalkIn(attendee: Attendee) {
+    if (!attendee) return
+    const res = await supabase.from('event_attendees').insert(attendee)
+    if (res.error) {
+      toast.error('Error registering walk-in', {
+        description: JSON.stringify(res.error)
+      })
+    } else {
+      toast.success('Successfully registered walk-in', {
+        description: `${attendee.name} registered`
+      })
+    }
+
+    attendees.value = [attendee, ...attendees.value]
+  }
+
   return {
     events,
     fetchEvents,
     attendees,
     fetchAttendees,
-    toggleCheckInAttendee
+    toggleCheckInAttendee,
+    insertWalkIn
   }
 }

@@ -1,8 +1,23 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { ColumnDef, RowData } from '@tanstack/vue-table'
+import { computed, ref } from 'vue'
+import type { ColumnDef } from '@tanstack/vue-table'
 import { FlexRender, useTable } from '@tanstack/vue-table'
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
 
+import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -15,6 +30,11 @@ import { features, type DataTableFeatures } from './features'
 import Input from '../ui/input/Input.vue'
 import type { Attendee } from '../../../types'
 import { getQuestions } from './helpers'
+import { Button } from '../ui/button'
+import { PlusIcon } from '@lucide/vue'
+import router from '@/router'
+import { toast } from 'vue-sonner'
+import useEventbrite from '@/stores/eventbrite-store'
 
 const props = defineProps<{
   columns: ColumnDef<DataTableFeatures, Attendee>[]
@@ -28,17 +48,107 @@ const table = useTable({
   getRowCanExpand: () => true
 })
 table.setPageSize(60)
+
+const { insertWalkIn } = useEventbrite()
+const isWalkInFormOpen = ref(false)
+const isSelectDropdownOpen = ref(false)
+function closeDialog() {
+  if (isSelectDropdownOpen.value) {
+    isSelectDropdownOpen.value = false
+  } else {
+    isWalkInFormOpen.value = false
+  }
+}
+const walkIn = ref<Attendee>({ ticketType: 'General' } as any)
+async function registerWalkIn(e: SubmitEvent) {
+  e.preventDefault()
+  const { name, basePrice, ticketType } = walkIn.value
+
+  if (!name || (!basePrice && basePrice !== 0) || !ticketType) {
+    toast.error(`error: ${JSON.stringify(walkIn.value)}`)
+    return
+  }
+
+  walkIn.value.attendeeId = 'walk-' + String(Math.floor(Math.random() * 1000000))
+  walkIn.value.orderId = 'walk-' + String(Math.floor(Math.random() * 1000000))
+  walkIn.value.eventId = router.currentRoute.value.params.eventId as string
+  walkIn.value.checkedIn = true
+
+  // Supabase
+  await insertWalkIn(walkIn.value)
+  walkIn.value = { ticketType: 'General' } as any
+  closeDialog()
+}
 </script>
 
 <template>
-  <div class="flex items-center py-4">
+  <div class="flex items-center py-4 justify-between">
     <Input
-      class="max-w-sm"
       variant="ghost"
       placeholder="Filter name..."
       :model-value="table.getColumn('name')?.getFilterValue() as string"
       @update:model-value="table.getColumn('name')?.setFilterValue($event)"
     />
+    <AlertDialog v-model:open="isWalkInFormOpen">
+      <AlertDialogTrigger as-child>
+        <Button variant="success" class="" @click="() => {}"><PlusIcon /></Button>
+      </AlertDialogTrigger>
+
+      <AlertDialogContent @on-overlay-click="closeDialog">
+        <AlertDialogHeader>
+          <AlertDialogTitle class="text-center">Register Walk-in</AlertDialogTitle>
+          <form @submit="registerWalkIn">
+            <FieldGroup>
+              <FieldSet>
+                <FieldGroup>
+                  <Field>
+                    <FieldLabel for="name-new">Name</FieldLabel>
+                    <Input v-model="walkIn.name" id="name-new" placeholder="Future Poet" required />
+                  </Field>
+                  <!-- eventId parsed, attendeeId & orderId randomized -->
+                  <Field>
+                    <FieldLabel for="basePrice-new">Amount Paid</FieldLabel>
+                    <Input
+                      id="basePrice-new"
+                      placeholder="5.67"
+                      required
+                      type="number"
+                      v-model="walkIn.basePrice"
+                    />
+                  </Field>
+                  <div class="grid grid-cols-3 gap-4">
+                    <Field>
+                      <FieldLabel for="ticketType-new">Ticket Type</FieldLabel>
+                      <Select
+                        default-value="General"
+                        v-model="walkIn.ticketType"
+                        required
+                        @update:open="(e) => (e === true ? (isSelectDropdownOpen = true) : null)"
+                        @update:model-value="() => (isSelectDropdownOpen = false)"
+                      >
+                        <SelectTrigger id="ticketType-new">
+                          <SelectValue placeholder="General" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="General"> General Admission </SelectItem>
+                          <SelectItem value="Supporter"> LAS Supporter </SelectItem>
+                          <SelectItem value="Open Miccer">Open Miccer</SelectItem>
+                          <SelectItem value="Waitlist">Waitlist</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                  </div>
+                  <Field orientation="horizontal">
+                    <Button variant="outline" type="button" @click="closeDialog()">Cancel</Button>
+                    <Button variant="success">Submit</Button>
+                  </Field>
+                </FieldGroup>
+              </FieldSet>
+            </FieldGroup>
+          </form>
+        </AlertDialogHeader>
+      </AlertDialogContent>
+    </AlertDialog>
   </div>
 
   <div class="border rounded-md">
