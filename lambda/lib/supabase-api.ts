@@ -9,3 +9,7 @@ const supabase = createClient(
 export async function addAttendeesToSupabase(attendee: Array<Attendee> | Attendee) {
   return supabase.from('event_attendees').upsert(attendee, { ignoreDuplicates: false })
 }
+
+export async function getAttendeeCountFromEventId(eventId: string) {
+  return (await supabase.from('event_attendees').select().eq('eventId', eventId)).count
+}

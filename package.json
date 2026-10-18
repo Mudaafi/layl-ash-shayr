@@ -31,6 +31,7 @@
     "reka-ui": "^2.11.0",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.0",
+    "telegram-interface": "^0.2.0",
     "vue": "^3.3.4",
     "vue-draggable-plus": "^0.6.1",
     "vue-horizontal": "^1.0.2",

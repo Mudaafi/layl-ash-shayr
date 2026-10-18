@@ -2,7 +2,7 @@ import { Handler } from '@netlify/functions'
 import { parseCookie } from 'cookie'
 import { initializeApp } from 'firebase-admin'
 import { getAuth } from 'firebase-admin/auth'
-import { ServerError } from '../types'
+import { getQuestions, isOpenMiccer, ServerError } from '../types'
 import {
   getAttendeeFromEventByAttendeeId,
   getAttendeesFromEventbrite,
@@ -10,6 +10,7 @@ import {
 } from './lib/eventbrite-api'
 import { WebhookPayload } from './lib/eventbrite-api-types'
 import { addAttendeesToSupabase } from './lib/supabase-api'
+import { sendMessage } from 'telegram-interface'
 
 export const handler: Handler = async (event, context) => {
   const eventbriteToken = process.env.EVENTBRITE_TOK || ''
@@ -41,10 +42,38 @@ export const handler: Handler = async (event, context) => {
       const attendee = await getAttendeeFromEventByAttendeeId(eventbriteToken, eventId, attendeeId)
       attendee.userId = body.config.user_id
 
-      //TODO: update telegram bot
+      // update telegram bot
+      let text = `<b>New Sign Up!</b>\n\n`
+      text += `Name: ${attendee.name}\n`
+      text += `Ticket: ${attendee.ticketType}\n`
+
+      if (isOpenMiccer(attendee)) {
+        const qnAndAns = getQuestions(attendee)
+        text += '\n<b>💬 Open Miccer Details</b>\n\n'
+        text += `Email: ${attendee.email}\n`
+        text += `Contact: ${attendee.telegram || attendee.whatsapp}\n`
+
+        text += '\n<b>📝 Open Miccer Questionnaire</b>\n\n'
+        qnAndAns.forEach((entry) => {
+          text += `<i>${entry[0]}</i>\n`
+          text += `${entry[1]}\n\n`
+        })
+      }
+      await sendMessage(
+        process.env.TELEGRAM_BOT_TOK || '',
+        process.env.LAS_HOUSE_ID || '',
+        text,
+        undefined,
+        { message_thread_id: Number(process.env.LAS_BOT_TOPIC_ID) }
+      )
 
       // update supabase
       await addAttendeesToSupabase(attendee)
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: `Webhook on_updated completed for ${attendeeId}` })
+      }
     } else if (/eventbrite\/events\/[a-zA-Z0-9]+\/sync/.test(apiPath)) {
       const eventId = /eventbrite\/events\/([a-zA-Z0-9]+)\/sync/.exec(apiPath)?.[1]
 
