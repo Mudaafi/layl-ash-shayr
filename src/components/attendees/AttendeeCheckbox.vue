@@ -6,7 +6,7 @@ const emit = defineEmits<{
   checked: []
 }>()
 
-const { attendeeId } = defineProps<{ attendeeId: string }>()
+const { attendeeId, checkedIn } = defineProps<{ attendeeId: string; checkedIn: boolean }>()
 
 const { toggleCheckInAttendee } = useEventbrite()
 
@@ -22,7 +22,7 @@ function onClick(ev: MouseEvent) {
 </script>
 
 <template>
-  <Checkbox @click="onClick" />
+  <Checkbox @click="onClick" :default-value="checkedIn" />
 </template>
 
 <style lang="scss" scoped></style>

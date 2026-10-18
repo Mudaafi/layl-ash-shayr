@@ -10,9 +10,14 @@ import AttendeeCheckbox from './AttendeeCheckbox.vue'
 const columnHelper = createColumnHelper<DataTableFeatures, Attendee>()
 
 export const columns = columnHelper.columns([
-  columnHelper.display({
-    id: 'check',
-    cell: ({ row }) => h(AttendeeCheckbox, { attendeeId: row.original.attendeeId })
+  columnHelper.accessor('checkedIn', {
+    id: 'checkedIn',
+    header: () => null,
+    cell: ({ row }) =>
+      h(AttendeeCheckbox, {
+        attendeeId: row.original.attendeeId,
+        checkedIn: row.original.checkedIn
+      })
   }),
 
   columnHelper.accessor('orderId', {
