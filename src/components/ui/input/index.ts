@@ -17,7 +17,8 @@ export const inputVariants = cva('', {
       ),
       outline: cn(
         'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-3',
-        'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive'
+        'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
+        'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 px-2 py-0.5 rounded-sm'
       )
     }
   },

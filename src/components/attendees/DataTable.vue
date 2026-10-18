@@ -103,7 +103,13 @@ async function registerWalkIn(e: SubmitEvent) {
                 <FieldGroup>
                   <Field>
                     <FieldLabel for="name-new">Name</FieldLabel>
-                    <Input v-model="walkIn.name" id="name-new" placeholder="Future Poet" required />
+                    <Input
+                      v-model="walkIn.name"
+                      id="name-new"
+                      placeholder="Future Poet"
+                      required
+                      variant="outline"
+                    />
                   </Field>
                   <!-- eventId parsed, attendeeId & orderId randomized -->
                   <Field>
@@ -111,12 +117,26 @@ async function registerWalkIn(e: SubmitEvent) {
                     <Input
                       id="basePrice-new"
                       placeholder="5.67"
+                      :default-value="5"
                       required
-                      type="number"
+                      type="currency"
                       v-model="walkIn.basePrice"
+                      variant="outline"
                     />
                   </Field>
-                  <div class="grid grid-cols-3 gap-4">
+                  <Field>
+                    <FieldLabel for="quantity-new">Quantity</FieldLabel>
+                    <Input
+                      id="quantity-new"
+                      placeholder="1"
+                      :default-value="1"
+                      required
+                      type="number"
+                      v-model="walkIn.quantity"
+                      variant="outline"
+                    />
+                  </Field>
+                  <div class="flex flex-col">
                     <Field>
                       <FieldLabel for="ticketType-new">Ticket Type</FieldLabel>
                       <Select
@@ -138,7 +158,7 @@ async function registerWalkIn(e: SubmitEvent) {
                       </Select>
                     </Field>
                   </div>
-                  <Field orientation="horizontal">
+                  <Field orientation="horizontal" class="justify-end mt-4">
                     <Button variant="outline" type="button" @click="closeDialog()">Cancel</Button>
                     <Button variant="success">Submit</Button>
                   </Field>
