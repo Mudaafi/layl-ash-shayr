@@ -1,6 +1,8 @@
 import { sendMessage, TeleIdType, TeleMessage } from 'telegram-interface'
 import { getEventsFromEventbrite } from './eventbrite-api'
 import { getAttendeeCountFromEventId } from './supabase-api'
+import { cert, initializeApp, ServiceAccount } from 'firebase-admin'
+import { getAuth } from 'firebase-admin/auth'
 const botKey = process.env.TELEGRAM_BOT_TOK || ''
 
 export interface TeleMessageFromUser extends TeleMessage {
@@ -30,6 +32,10 @@ export async function runCommand(msg: TeleMessageCommand) {
 
     case '/check_signups':
       return _runCheckSignups(msg.chat.id)
+
+    case '/adminify':
+      const email = msg.text.replace('/adminify', '').trim()
+      return _runAdminify(email, msg.chat.id)
   }
 }
 
@@ -51,6 +57,48 @@ async function _runCheckSignups(chatId: TeleIdType) {
   text += `Sign ups: ${numberOfAttendees} / ${eventCapacity}`
 
   return sendMessage(botKey, chatId, text)
+}
+
+// TODO: Test This
+async function _runAdminify(email: string, chatId: TeleIdType) {
+  if (!email) {
+    return sendMessage(
+      botKey,
+      chatId,
+      'Please use with your google email address. e.g. /adminify email@gmail.com'
+    )
+  }
+
+  const serviceAcc: ServiceAccount = {
+    clientEmail: 'firebase-adminsdk-fbsvc@laylashshayr.iam.gserviceaccount.com',
+    privateKey: process.env.FIREBASE_TOK,
+    projectId: 'laylashshayr'
+  }
+
+  const app = initializeApp({
+    projectId: 'laylashshayr',
+    credential: cert(serviceAcc)
+  })
+  const user = await getAuth(app).getUserByEmail(email)
+  if (!user) {
+    return sendMessage(
+      botKey,
+      chatId,
+      "Hmm, it looks like you haven't tried logging in on the website yet. Please log in via Google on the website first and retry this."
+    )
+  }
+
+  const currentClaims = user.customClaims || {}
+  currentClaims['admin'] = true
+  currentClaims['role'] = 'authenticated' // supabase
+
+  try {
+    await getAuth().setCustomUserClaims(user.uid, currentClaims)
+  } catch (err) {
+    return sendMessage(botKey, chatId, 'Uh oh, ask @mudaafi for some help')
+  }
+
+  return sendMessage(botKey, chatId, '✅ With great power comes great responsibility')
 }
 
 // ---- Utilities
