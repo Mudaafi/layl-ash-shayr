@@ -2,15 +2,9 @@ import { Handler } from '@netlify/functions'
 import { parseCookie } from 'cookie'
 import { initializeApp } from 'firebase-admin'
 import { getAuth } from 'firebase-admin/auth'
-import { getQuestions, isOpenMiccer, ServerError } from '../types'
-import {
-  getAttendeeFromEventByAttendeeId,
-  getAttendeesFromEventbrite,
-  getEventsFromEventbrite
-} from './lib/eventbrite-api'
-import { WebhookPayload } from './lib/eventbrite-api-types'
+import { ServerError } from '../types'
+import { getAttendeesFromEventbrite, getEventsFromEventbrite } from './lib/eventbrite-api'
 import { addAttendeesToSupabase } from './lib/supabase-api'
-import { sendMessage } from 'telegram-interface'
 
 export const handler: Handler = async (event, context) => {
   const eventbriteToken = process.env.EVENTBRITE_TOK || ''
@@ -23,57 +17,6 @@ export const handler: Handler = async (event, context) => {
 
     if (apiPath === 'eventbrite') {
       return { statusCode: 200, body: JSON.stringify({ message: 'Success' }) }
-    } else if (apiPath === 'eventbrite/webhook_on_attendee_updated') {
-      if (!event.body) throw new ServerError({ message: 'event.body is malformed' })
-
-      const body = JSON.parse(event.body) as WebhookPayload
-      // https://www.eventbriteapi.com/v3/events/2003257008639/attendees/22871317754/
-      const eventId =
-        /https:\/\/www.eventbriteapi.com\/v3\/events\/([0-9]+)\/attendees\/[0-9]+\//.exec(
-          body.api_url
-        )?.[1]
-      const attendeeId =
-        /https:\/\/www.eventbriteapi.com\/v3\/events\/[0-9]+\/attendees\/([0-9]+)\//.exec(
-          body.api_url
-        )?.[1]
-
-      if (!eventId || !attendeeId)
-        throw new ServerError({ message: 'eventbrite api_url missing fields' })
-      const attendee = await getAttendeeFromEventByAttendeeId(eventbriteToken, eventId, attendeeId)
-      attendee.userId = body.config.user_id
-
-      // update telegram bot
-      let text = `<b>New Sign Up!</b>\n\n`
-      text += `Name: ${attendee.name}\n`
-      text += `Ticket: ${attendee.ticketType}\n`
-
-      if (isOpenMiccer(attendee)) {
-        const qnAndAns = getQuestions(attendee)
-        text += '\n<b>💬 Open Miccer Details</b>\n\n'
-        text += `Email: ${attendee.email}\n`
-        text += `Contact: ${attendee.telegram || attendee.whatsapp}\n`
-
-        text += '\n<b>📝 Open Miccer Questionnaire</b>\n\n'
-        qnAndAns.forEach((entry) => {
-          text += `<i>${entry[0]}</i>\n`
-          text += `${entry[1]}\n\n`
-        })
-      }
-      await sendMessage(
-        process.env.TELEGRAM_BOT_TOK || '',
-        process.env.LAS_HOUSE_ID || '',
-        text,
-        undefined,
-        { message_thread_id: Number(process.env.LAS_BOT_TOPIC_ID) }
-      )
-
-      // update supabase
-      await addAttendeesToSupabase(attendee)
-
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ message: `Webhook on_updated completed for ${attendeeId}` })
-      }
     } else if (/eventbrite\/events\/[a-zA-Z0-9]+\/sync/.test(apiPath)) {
       const eventId = /eventbrite\/events\/([a-zA-Z0-9]+)\/sync/.exec(apiPath)?.[1]
 
@@ -130,11 +73,6 @@ async function validateCall(requiredVariables: any) {
       statusCode: 500,
       message: "Server doesn't have the required credentials."
     })
-  }
-
-  if (apiPath === 'eventbrite/webhook_on_attendee_updated') {
-    // Damn it eventbrite
-    return true
   }
 
   if (!googleIdToken) {

@@ -2,6 +2,9 @@
 	command = "vite build"
     functions = "lambda"
 
+[functions.webhooks]
+    background = true
+
 [dev]
     command = "vite"
 
