@@ -39,9 +39,10 @@
     "vue-sonner": "^2.0.9"
   },
   "devDependencies": {
-    "@netlify/functions": "^2.8.0",
+    "@netlify/functions": "^6.0.3",
     "@rushstack/eslint-patch": "^1.2.0",
     "@tsconfig/node18": "^2.0.1",
+    "@types/cookie": "^1.0.0",
     "@types/google-one-tap": "^1.2.7",
     "@types/node": "^20.14.9",
     "@vitejs/plugin-vue": "^6.0.7",

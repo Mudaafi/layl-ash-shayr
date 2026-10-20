@@ -1,11 +1,15 @@
-import { Handler } from '@netlify/functions'
+import { BackgroundHandler, Config } from '@netlify/functions'
 import { getQuestions, isOpenMiccer, ServerError } from '../types'
 import { WebhookPayload } from './lib/eventbrite-api-types'
 import { getAttendeeFromEventByAttendeeId } from './lib/eventbrite-api'
 import { sendMessage } from 'telegram-interface'
 import { addAttendeesToSupabase } from './lib/supabase-api'
 
-export const handler: Handler = async (event, context) => {
+export const config: Config = {
+  background: true
+}
+
+export const handler: BackgroundHandler = async (event, context) => {
   const eventbriteToken = process.env.EVENTBRITE_TOK || ''
 
   try {
@@ -13,7 +17,8 @@ export const handler: Handler = async (event, context) => {
     const apiPath = paths.slice(paths.indexOf('webhooks')).join('/')
 
     if (apiPath === 'webhooks') {
-      return { statusCode: 200, body: JSON.stringify({ message: 'Success' }) }
+      console.log({ statusCode: 200, body: JSON.stringify({ message: 'Success' }) })
+      return
     } else if (apiPath === 'webhooks/eventbrite_on_attendee_updated') {
       await validateCall({ eventbriteToken })
 
@@ -63,24 +68,28 @@ export const handler: Handler = async (event, context) => {
       // update supabase
       await addAttendeesToSupabase(attendee)
 
-      return {
+      console.log({
         statusCode: 200,
         body: JSON.stringify({ message: `Webhook on_updated completed for ${attendeeId}` })
-      }
+      })
+      return
     }
   } catch (err) {
     const serverError = err as ServerError
 
-    if (serverError.serverResponse) return serverError.serverResponse
-    console.log(err)
+    if (serverError.serverResponse) {
+      console.log(err)
+      return
+    }
   }
 
-  return {
+  console.log({
     statusCode: 400,
     body: JSON.stringify({
       message: 'Request fell through'
     })
-  }
+  })
+  return
 }
 
 async function validateCall(requiredVariables: any) {

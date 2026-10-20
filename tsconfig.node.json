@@ -5,7 +5,10 @@
     "vitest.config.*",
     "cypress.config.*",
     "nightwatch.conf.*",
-    "playwright.config.*"
+    "playwright.config.*",
+    "lambda/*",
+    "lambda/**/*",
+    "types.ts"
   ],
   "compilerOptions": {
     "ignoreDeprecations": "6.0",
