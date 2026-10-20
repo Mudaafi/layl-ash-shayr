@@ -132,7 +132,7 @@ async function validateCall(requiredVariables: any) {
     })
   }
 
-  if (apiPath === 'eventbrite/on_attendee_updated') {
+  if (apiPath === 'eventbrite/webhook_on_attendee_updated') {
     // Damn it eventbrite
     return true
   }
