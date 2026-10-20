@@ -6,7 +6,8 @@ import { sendMessage } from 'telegram-interface'
 import { addAttendeesToSupabase } from './lib/supabase-api'
 
 export const config: Config = {
-  background: true
+  background: true,
+  path: '/webhooks'
 }
 
 export const handler: BackgroundHandler = async (event, context) => {
