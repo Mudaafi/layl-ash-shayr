@@ -125,7 +125,7 @@ async function validateCall(requiredVariables: any) {
   const paths = requiredVariables.event.path.split('/')
   const apiPath = paths.slice(paths.indexOf('eventbrite')).join('/')
 
-  if (!requiredVariables.eventbriteToken || !googleIdToken) {
+  if (!requiredVariables.eventbriteToken) {
     throw new ServerError({
       statusCode: 500,
       message: "Server doesn't have the required credentials."
@@ -135,6 +135,13 @@ async function validateCall(requiredVariables: any) {
   if (apiPath === 'eventbrite/on_attendee_updated') {
     // Damn it eventbrite
     return true
+  }
+
+  if (!googleIdToken) {
+    throw new ServerError({
+      statusCode: 401,
+      message: 'You are not passing the right credentials'
+    })
   }
 
   const firestoreApp = initializeApp({
@@ -150,7 +157,7 @@ async function validateCall(requiredVariables: any) {
 
   if (!isAdmin)
     throw new ServerError({
-      statusCode: 404,
+      statusCode: 403,
       message: 'You are not permitted to perform this operation'
     })
 
