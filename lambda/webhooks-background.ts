@@ -6,8 +6,7 @@ import { sendMessage } from 'telegram-interface'
 import { addAttendeesToSupabase } from './lib/supabase-api'
 
 export const config: Config = {
-  background: true,
-  path: '/webhooks'
+  background: true
 }
 
 export const handler: BackgroundHandler = async (event, context) => {
@@ -15,12 +14,12 @@ export const handler: BackgroundHandler = async (event, context) => {
 
   try {
     const paths = event.path.split('/')
-    const apiPath = paths.slice(paths.indexOf('webhooks')).join('/')
+    const apiPath = paths.slice(paths.indexOf('webhooks-background')).join('/')
 
-    if (apiPath === 'webhooks') {
+    if (apiPath === 'webhooks-background') {
       console.log({ statusCode: 200, body: JSON.stringify({ message: 'Success' }) })
       return
-    } else if (apiPath === 'webhooks/eventbrite_on_attendee_updated') {
+    } else if (apiPath === 'webhooks-background/eventbrite_on_attendee_updated') {
       await validateCall({ eventbriteToken })
 
       if (!event.body) throw new ServerError({ message: 'event.body is malformed' })
@@ -77,11 +76,9 @@ export const handler: BackgroundHandler = async (event, context) => {
     }
   } catch (err) {
     const serverError = err as ServerError
+    console.log(err)
 
-    if (serverError.serverResponse) {
-      console.log(err)
-      return
-    }
+    return
   }
 
   console.log({
@@ -95,7 +92,7 @@ export const handler: BackgroundHandler = async (event, context) => {
 
 async function validateCall(requiredVariables: any) {
   const paths = requiredVariables.event.path.split('/')
-  const apiPath = paths.slice(paths.indexOf('webhooks')).join('/')
+  const apiPath = paths.slice(paths.indexOf('webhooks-background')).join('/')
 
   if (
     Object.keys(requiredVariables).includes('eventbriteToken') &&
@@ -107,7 +104,7 @@ async function validateCall(requiredVariables: any) {
     })
   }
 
-  if (apiPath === 'webhooks/eventbrite_on_attendee_updated') {
+  if (apiPath === 'webhooks-background/eventbrite_on_attendee_updated') {
     // Damn it eventbrite
     return true
   }
