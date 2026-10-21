@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import router from '@/router'
 import useFiretore from '@/stores/firestore'
 import { signInWithCredential, type UserCredential } from 'firebase/auth'
 import { GoogleAuthProvider } from 'firebase/auth/web-extension'
@@ -36,6 +37,7 @@ async function onGoogleAuth(response: any) {
   const user = await signInWithCredential(auth.value, googleCreds)
 
   emit('onLoggedIn', user)
+  router.go(0)
 }
 
 const initSignIn = () => {

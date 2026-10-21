@@ -1,3 +1,4 @@
+import { useStorage } from '@vueuse/core'
 import { initializeApp, type FirebaseOptions } from 'firebase/app'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore/lite'
@@ -13,7 +14,7 @@ const firestoreApp = initializeApp({
   ...firebaseConfigs
 })
 const app = reactive(firestoreApp)
-const isAdmin = ref(false)
+const isAdmin = useStorage<boolean>('isAdmin', false, sessionStorage)
 
 const firestore = computed(() => {
   return getFirestore(app, 'laylashshayr')
@@ -25,6 +26,8 @@ const auth = computed(() => {
 
 onAuthStateChanged(auth.value, async () => {
   const currentIdTokenResult = await auth.value.currentUser?.getIdTokenResult()
+
+  if (currentIdTokenResult?.token) cookieStore.set('google', currentIdTokenResult?.token)
   isAdmin.value = currentIdTokenResult?.claims?.admin === true
 })
 

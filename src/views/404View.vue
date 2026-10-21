@@ -1,4 +1,9 @@
+<script setup lang="ts">
+import Header from '@/components/Header.vue'
+</script>
+
 <template>
+  <Header />
   <main class="title-card">
     <h1>404</h1>
     <div>Huh, there's nothing here.</div>
