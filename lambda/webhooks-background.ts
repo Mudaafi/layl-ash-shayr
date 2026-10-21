@@ -57,13 +57,13 @@ export const handler: BackgroundHandler = async (event, context) => {
           text += `${entry[1]}\n\n`
         })
       }
-      // await sendMessage(
-      //   process.env.TELEGRAM_BOT_TOK || '',
-      //   process.env.LAS_HOUSE_ID || '',
-      //   text,
-      //   undefined,
-      //   { message_thread_id: Number(process.env.LAS_BOT_TOPIC_ID) }
-      // )
+      await sendMessage(
+        process.env.TELEGRAM_BOT_TOK || '',
+        process.env.LAS_HOUSE_ID || '',
+        text,
+        undefined,
+        { message_thread_id: Number(process.env.LAS_BOT_TOPIC_ID) }
+      )
 
       // update supabase
       await addAttendeesToSupabase(attendee)
