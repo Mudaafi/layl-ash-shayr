@@ -13,7 +13,7 @@ export interface TeleMessageCommand extends TeleMessageFromUser {
   text: string
 }
 
-const COMMANDS = ['/start', '/identify']
+const COMMANDS = ['/start', '/identify', 'check_signups', '/adminify']
 
 export function isCommand(msg: TeleMessage): msg is TeleMessageCommand {
   if (!msg.text || msg.from == null) return false
@@ -35,7 +35,7 @@ export async function runCommand(msg: TeleMessageCommand) {
 
     case '/adminify':
       const email = msg.text.replace('/adminify', '').trim()
-      return _runAdminify(email, msg.chat.id)
+      return _runAdminify(email, msg.chat.id, msg.message_id)
   }
 }
 
@@ -59,19 +59,21 @@ async function _runCheckSignups(chatId: TeleIdType) {
   return sendMessage(botKey, chatId, text)
 }
 
-// TODO: Test This
-async function _runAdminify(email: string, chatId: TeleIdType) {
+async function _runAdminify(email: string, chatId: TeleIdType, msgId: TeleMessage['message_id']) {
+  console.log('🚀 ~ _runAdminify ~ email:', email)
   if (!email) {
     return sendMessage(
       botKey,
       chatId,
-      'Please use with your google email address. e.g. /adminify email@gmail.com'
+      'Please use with your google email address. e.g. /adminify email@gmail.com',
+      undefined,
+      { message_thread_id: msgId }
     )
   }
 
   const serviceAcc: ServiceAccount = {
     clientEmail: 'firebase-adminsdk-fbsvc@laylashshayr.iam.gserviceaccount.com',
-    privateKey: process.env.FIREBASE_TOK,
+    privateKey: process.env.FIREBASE_TOK?.replace(new RegExp('\\\\n', 'g'), '\n'),
     projectId: 'laylashshayr'
   }
 
@@ -79,12 +81,17 @@ async function _runAdminify(email: string, chatId: TeleIdType) {
     projectId: 'laylashshayr',
     credential: cert(serviceAcc)
   })
-  const user = await getAuth(app).getUserByEmail(email)
-  if (!user) {
+
+  let user
+  try {
+    user = await getAuth(app).getUserByEmail(email)
+  } catch {
     return sendMessage(
       botKey,
       chatId,
-      "Hmm, it looks like you haven't tried logging in on the website yet. Please log in via Google on the website first and retry this."
+      "Hmm, it looks like you haven't tried logging in on the website yet. Please log in via Google on the website first and retry this.",
+      undefined,
+      { message_thread_id: msgId }
     )
   }
 
@@ -98,7 +105,9 @@ async function _runAdminify(email: string, chatId: TeleIdType) {
     return sendMessage(botKey, chatId, 'Uh oh, ask @mudaafi for some help')
   }
 
-  return sendMessage(botKey, chatId, '✅ With great power comes great responsibility')
+  return sendMessage(botKey, chatId, '✅ With great power comes great responsibility', undefined, {
+    message_thread_id: msgId
+  })
 }
 
 // ---- Utilities
