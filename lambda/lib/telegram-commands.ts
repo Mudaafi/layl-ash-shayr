@@ -60,7 +60,6 @@ async function _runCheckSignups(chatId: TeleIdType) {
 }
 
 async function _runAdminify(email: string, chatId: TeleIdType, msgId: TeleMessage['message_id']) {
-  console.log('🚀 ~ _runAdminify ~ email:', email)
   if (!email) {
     return sendMessage(
       botKey,
