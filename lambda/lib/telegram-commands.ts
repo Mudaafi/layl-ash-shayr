@@ -1,6 +1,10 @@
-import { sendMessage, TeleIdType, TeleMessage } from 'telegram-interface'
+import { sendMessage, setMessageReaction, TeleIdType, TeleMessage } from 'telegram-interface'
 import { getEventsFromEventbrite } from './eventbrite-api'
-import { getAttendeeCountFromEventId } from './supabase-api'
+import {
+  getAttendeeCountFromEventId,
+  getOMCountFromEventId,
+  getOMsFromEventId
+} from './supabase-api'
 import { cert, initializeApp, ServiceAccount } from 'firebase-admin'
 import { getAuth } from 'firebase-admin/auth'
 const botKey = process.env.TELEGRAM_BOT_TOK || ''
@@ -13,7 +17,7 @@ export interface TeleMessageCommand extends TeleMessageFromUser {
   text: string
 }
 
-const COMMANDS = ['/start', '/identify', 'check_signups', '/adminify']
+const COMMANDS = ['/start', '/identify', '/check_signups', '/adminify']
 
 export function isCommand(msg: TeleMessage): msg is TeleMessageCommand {
   if (!msg.text || msg.from == null) return false
@@ -31,7 +35,7 @@ export async function runCommand(msg: TeleMessageCommand) {
       return _runIdentify(msg.from.id, msg.chat.id)
 
     case '/check_signups':
-      return _runCheckSignups(msg.chat.id)
+      return _runCheckSignups(msg.chat.id, msg.message_id)
 
     case '/adminify':
       const email = msg.text.replace('/adminify', '').trim()
@@ -44,19 +48,31 @@ async function _runIdentify(userId: TeleIdType, chatId: TeleIdType) {
   return sendMessage(botKey, userId, `Chat ID: ${chatId}`)
 }
 
-async function _runCheckSignups(chatId: TeleIdType) {
+async function _runCheckSignups(chatId: TeleIdType, msgId: TeleMessage['message_id']) {
+  await setMessageReaction(botKey, chatId, msgId, [{ emoji: '👀', type: 'emoji' }])
+
   const events = await getEventsFromEventbrite(process.env.EVENTBRITE_TOK || '')
   events.sort((a, b) => (a.datetime > b.datetime ? -1 : a.datetime === b.datetime ? 0 : 1))
 
   const latestEvent = events[0]
-  const numberOfAttendees = getAttendeeCountFromEventId(latestEvent.id)
+  const numberOfAttendees = await getAttendeeCountFromEventId(latestEvent.id)
+  const numberOfOMs = await getOMCountFromEventId(latestEvent.id)
+  const omList = await getOMsFromEventId(latestEvent.id)
   const eventCapacity = latestEvent.capacity
   const eventName = latestEvent.name
 
-  let text = `<b>${eventName}</b>\n\n`
-  text += `Sign ups: ${numberOfAttendees} / ${eventCapacity}`
+  let text = `<b>🌙 ${eventName}</b>\n\n`
+  text += `OM Sign ups: ${numberOfOMs} / 5\n`
 
-  return sendMessage(botKey, chatId, text)
+  omList?.forEach((om, i) => {
+    text += `  ${i + 1}. ${om.name} (${om.contact})\n`
+  })
+
+  text += `\nSign ups (w/o OMs): ${numberOfAttendees} / ${eventCapacity}`
+
+  await sendMessage(botKey, chatId, text)
+
+  return setMessageReaction(botKey, chatId, msgId, [{ emoji: '🤓', type: 'emoji' }])
 }
 
 async function _runAdminify(email: string, chatId: TeleIdType, msgId: TeleMessage['message_id']) {
@@ -66,7 +82,7 @@ async function _runAdminify(email: string, chatId: TeleIdType, msgId: TeleMessag
       chatId,
       'Please use with your google email address. e.g. /adminify email@gmail.com',
       undefined,
-      { message_thread_id: msgId }
+      { reply_to_message_id: msgId }
     )
   }
 
@@ -90,7 +106,7 @@ async function _runAdminify(email: string, chatId: TeleIdType, msgId: TeleMessag
       chatId,
       "Hmm, it looks like you haven't tried logging in on the website yet. Please log in via Google on the website first and retry this.",
       undefined,
-      { message_thread_id: msgId }
+      { reply_to_message_id: msgId }
     )
   }
 
@@ -105,7 +121,7 @@ async function _runAdminify(email: string, chatId: TeleIdType, msgId: TeleMessag
   }
 
   return sendMessage(botKey, chatId, '✅ With great power comes great responsibility', undefined, {
-    message_thread_id: msgId
+    reply_to_message_id: msgId
   })
 }
 
