@@ -13,7 +13,7 @@ export interface TeleMessageCommand extends TeleMessageFromUser {
   text: string
 }
 
-const COMMANDS = ['/start', '/identify', 'check_signups', '/adminify']
+const COMMANDS = ['/start', '/identify', '/check_signups', '/adminify']
 
 export function isCommand(msg: TeleMessage): msg is TeleMessageCommand {
   if (!msg.text || msg.from == null) return false
