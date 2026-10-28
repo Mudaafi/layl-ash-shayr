@@ -66,7 +66,7 @@ async function _runAdminify(email: string, chatId: TeleIdType, msgId: TeleMessag
       chatId,
       'Please use with your google email address. e.g. /adminify email@gmail.com',
       undefined,
-      { message_thread_id: msgId }
+      { reply_to_message_id: msgId }
     )
   }
 
@@ -90,7 +90,7 @@ async function _runAdminify(email: string, chatId: TeleIdType, msgId: TeleMessag
       chatId,
       "Hmm, it looks like you haven't tried logging in on the website yet. Please log in via Google on the website first and retry this.",
       undefined,
-      { message_thread_id: msgId }
+      { reply_to_message_id: msgId }
     )
   }
 
@@ -105,7 +105,7 @@ async function _runAdminify(email: string, chatId: TeleIdType, msgId: TeleMessag
   }
 
   return sendMessage(botKey, chatId, '✅ With great power comes great responsibility', undefined, {
-    message_thread_id: msgId
+    reply_to_message_id: msgId
   })
 }
 
