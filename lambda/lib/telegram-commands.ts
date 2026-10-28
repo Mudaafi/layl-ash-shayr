@@ -49,7 +49,11 @@ async function _runIdentify(userId: TeleIdType, chatId: TeleIdType) {
   return sendMessage(botKey, userId, `Chat ID: ${chatId}`)
 }
 
-async function _runCheckSignups(chatId: TeleIdType, msgId: TeleMessage['message_id']) {
+async function _runCheckSignups(
+  chatId: TeleIdType,
+  msgId: TeleMessage['message_id'],
+  msgThreadId?: number
+) {
   await setMessageReaction(botKey, chatId, msgId, [{ emoji: '👀', type: 'emoji' }])
 
   const events = await getEventsFromEventbrite(process.env.EVENTBRITE_TOK || '')
@@ -71,19 +75,26 @@ async function _runCheckSignups(chatId: TeleIdType, msgId: TeleMessage['message_
 
   text += `\nSign ups (w/o OMs): ${numberOfAttendees} / ${eventCapacity}`
 
-  await sendMessage(botKey, chatId, text)
+  await sendMessage(botKey, chatId, text, undefined, {
+    message_thread_id: msgThreadId
+  })
 
   return setMessageReaction(botKey, chatId, msgId, [{ emoji: '🤓', type: 'emoji' }])
 }
 
-async function _runAdminify(email: string, chatId: TeleIdType, msgId: TeleMessage['message_id']) {
+async function _runAdminify(
+  email: string,
+  chatId: TeleIdType,
+  msgId: TeleMessage['message_id'],
+  msgThreadId?: number
+) {
   if (!email) {
     return sendMessage(
       botKey,
       chatId,
       'Please use with your google email address. e.g. /adminify email@gmail.com',
       undefined,
-      { reply_to_message_id: msgId }
+      { reply_to_message_id: msgId, message_thread_id: msgThreadId }
     )
   }
 
@@ -104,7 +115,7 @@ async function _runAdminify(email: string, chatId: TeleIdType, msgId: TeleMessag
       chatId,
       "Hmm, it looks like you haven't tried logging in on the website yet. Please log in via Google on the website first and retry this.",
       undefined,
-      { reply_to_message_id: msgId }
+      { reply_to_message_id: msgId, message_thread_id: msgThreadId }
     )
   }
 
@@ -115,11 +126,14 @@ async function _runAdminify(email: string, chatId: TeleIdType, msgId: TeleMessag
   try {
     await getAuth().setCustomUserClaims(user.uid, currentClaims)
   } catch (err) {
-    return sendMessage(botKey, chatId, 'Uh oh, ask @mudaafi for some help')
+    return sendMessage(botKey, chatId, 'Uh oh, ask @mudaafi for some help', undefined, {
+      message_thread_id: msgThreadId
+    })
   }
 
   return sendMessage(botKey, chatId, '✅ With great power comes great responsibility', undefined, {
-    reply_to_message_id: msgId
+    reply_to_message_id: msgId,
+    message_thread_id: msgThreadId
   })
 }
 
