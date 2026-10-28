@@ -127,7 +127,7 @@ async function _runAdminify(email: string, chatId: TeleIdType, msgId: TeleMessag
 
 function _extractCommand(text: string) {
   if (text.includes('/')) {
-    const resRegex = text.match(/(\/[^ ]+)/g)
+    const resRegex = text.replace('@laylashshayr_bot', '').match(/(\/[^ ]+)/g)
     if (resRegex) return resRegex[0]
   }
 }
