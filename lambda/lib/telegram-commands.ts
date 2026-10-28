@@ -1,4 +1,4 @@
-import { sendMessage, TeleIdType, TeleMessage } from 'telegram-interface'
+import { sendMessage, setMessageReaction, TeleIdType, TeleMessage } from 'telegram-interface'
 import { getEventsFromEventbrite } from './eventbrite-api'
 import { getAttendeeCountFromEventId } from './supabase-api'
 import { cert, initializeApp, ServiceAccount } from 'firebase-admin'
@@ -31,7 +31,7 @@ export async function runCommand(msg: TeleMessageCommand) {
       return _runIdentify(msg.from.id, msg.chat.id)
 
     case '/check_signups':
-      return _runCheckSignups(msg.chat.id)
+      return _runCheckSignups(msg.chat.id, msg.message_id)
 
     case '/adminify':
       const email = msg.text.replace('/adminify', '').trim()
@@ -44,19 +44,23 @@ async function _runIdentify(userId: TeleIdType, chatId: TeleIdType) {
   return sendMessage(botKey, userId, `Chat ID: ${chatId}`)
 }
 
-async function _runCheckSignups(chatId: TeleIdType) {
+async function _runCheckSignups(chatId: TeleIdType, msgId: TeleMessage['message_id']) {
+  await setMessageReaction(botKey, chatId, msgId, [{ emoji: '👀', type: 'emoji' }])
+
   const events = await getEventsFromEventbrite(process.env.EVENTBRITE_TOK || '')
   events.sort((a, b) => (a.datetime > b.datetime ? -1 : a.datetime === b.datetime ? 0 : 1))
 
   const latestEvent = events[0]
-  const numberOfAttendees = getAttendeeCountFromEventId(latestEvent.id)
+  const numberOfAttendees = await getAttendeeCountFromEventId(latestEvent.id)
   const eventCapacity = latestEvent.capacity
   const eventName = latestEvent.name
 
   let text = `<b>${eventName}</b>\n\n`
   text += `Sign ups: ${numberOfAttendees} / ${eventCapacity}`
 
-  return sendMessage(botKey, chatId, text)
+  await sendMessage(botKey, chatId, text)
+
+  return setMessageReaction(botKey, chatId, msgId, [{ emoji: '🤓', type: 'emoji' }])
 }
 
 async function _runAdminify(email: string, chatId: TeleIdType, msgId: TeleMessage['message_id']) {
