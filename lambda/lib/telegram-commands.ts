@@ -36,11 +36,11 @@ export async function runCommand(msg: TeleMessageCommand) {
       return _runIdentify(msg.from.id, msg.chat.id)
 
     case '/check_signups':
-      return _runCheckSignups(msg.chat.id, msg.message_id)
+      return _runCheckSignups(msg.chat.id, msg.message_id, msg.message_thread_id as number)
 
     case '/adminify':
       const email = msg.text.replace('/adminify', '').trim()
-      return _runAdminify(email, msg.chat.id, msg.message_id)
+      return _runAdminify(email, msg.chat.id, msg.message_id, msg.message_thread_id as number)
   }
 }
 
