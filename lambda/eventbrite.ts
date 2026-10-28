@@ -1,10 +1,10 @@
 import { Handler } from '@netlify/functions'
 import { parseCookie } from 'cookie'
-import { initializeApp } from 'firebase-admin'
 import { getAuth } from 'firebase-admin/auth'
 import { ServerError } from '../types'
 import { getAttendeesFromEventbrite, getEventsFromEventbrite } from './lib/eventbrite-api'
 import { addAttendeesToSupabase } from './lib/supabase-api'
+import getFirestore from './lib/firestore'
 
 export const handler: Handler = async (event, context) => {
   const eventbriteToken = process.env.EVENTBRITE_TOK || ''
@@ -82,9 +82,7 @@ async function validateCall(requiredVariables: any) {
     })
   }
 
-  const firestoreApp = initializeApp({
-    projectId: 'laylashshayr'
-  })
+  const firestoreApp = getFirestore()
 
   const decodedUser = await getAuth(firestoreApp)
     .verifyIdToken(googleIdToken)

@@ -5,8 +5,9 @@ import {
   getOMCountFromEventId,
   getOMsFromEventId
 } from './supabase-api'
-import { cert, initializeApp, ServiceAccount } from 'firebase-admin'
+import { cert, ServiceAccount } from 'firebase-admin'
 import { getAuth } from 'firebase-admin/auth'
+import getFirestore from './firestore'
 const botKey = process.env.TELEGRAM_BOT_TOK || ''
 
 export interface TeleMessageFromUser extends TeleMessage {
@@ -92,10 +93,7 @@ async function _runAdminify(email: string, chatId: TeleIdType, msgId: TeleMessag
     projectId: 'laylashshayr'
   }
 
-  const app = initializeApp({
-    projectId: 'laylashshayr',
-    credential: cert(serviceAcc)
-  })
+  const app = getFirestore(cert(serviceAcc))
 
   let user
   try {
