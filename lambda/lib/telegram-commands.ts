@@ -1,6 +1,10 @@
 import { sendMessage, setMessageReaction, TeleIdType, TeleMessage } from 'telegram-interface'
 import { getEventsFromEventbrite } from './eventbrite-api'
-import { getAttendeeCountFromEventId } from './supabase-api'
+import {
+  getAttendeeCountFromEventId,
+  getOMCountFromEventId,
+  getOMsFromEventId
+} from './supabase-api'
 import { cert, initializeApp, ServiceAccount } from 'firebase-admin'
 import { getAuth } from 'firebase-admin/auth'
 const botKey = process.env.TELEGRAM_BOT_TOK || ''
@@ -52,11 +56,19 @@ async function _runCheckSignups(chatId: TeleIdType, msgId: TeleMessage['message_
 
   const latestEvent = events[0]
   const numberOfAttendees = await getAttendeeCountFromEventId(latestEvent.id)
+  const numberOfOMs = await getOMCountFromEventId(latestEvent.id)
+  const omList = await getOMsFromEventId(latestEvent.id)
   const eventCapacity = latestEvent.capacity
   const eventName = latestEvent.name
 
-  let text = `<b>${eventName}</b>\n\n`
-  text += `Sign ups: ${numberOfAttendees} / ${eventCapacity}`
+  let text = `<b>🌙 ${eventName}</b>\n\n`
+  text += `OM Sign ups: ${numberOfOMs} / 5\n`
+
+  omList?.forEach((om, i) => {
+    text += `  ${i + 1}. ${om.name} (${om.contact})\n`
+  })
+
+  text += `\nSign ups (w/o OMs): ${numberOfAttendees} / ${eventCapacity}`
 
   await sendMessage(botKey, chatId, text)
 
