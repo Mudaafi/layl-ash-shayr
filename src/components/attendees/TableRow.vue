@@ -3,8 +3,8 @@ import { FlexRender, type Row } from '@tanstack/vue-table'
 import type { DataTableFeatures } from './features'
 import type { Attendee } from '../../../types'
 import { TableCell, TableRow } from '@/components/ui/table'
-import { shallowRef, useTemplateRef, watch } from 'vue'
-import { useSwipe, type UseSwipeDirection } from '@vueuse/core'
+import { shallowRef, useTemplateRef } from 'vue'
+import { useSwipe } from '@vueuse/core'
 import useEventbrite from '@/stores/eventbrite-store'
 
 const props = defineProps<{
