@@ -1,10 +1,11 @@
 // components/payments/columns.ts
 import { h } from 'vue'
-import { createColumnHelper } from '@tanstack/vue-table'
+import { createColumnHelper, filterFn_equals } from '@tanstack/vue-table'
 import type { DataTableFeatures } from './features'
 import type { Attendee } from '../../../types'
 import SortableHeader from './SortableHeader.vue'
 import AttendeeCheckbox from './AttendeeCheckbox.vue'
+import AttendeeCheckboxHeader from './AttendeeCheckboxHeader.vue'
 
 // Use `accessor` for data columns and `display` for columns without one.
 const columnHelper = createColumnHelper<DataTableFeatures, Attendee>()
@@ -12,12 +13,13 @@ const columnHelper = createColumnHelper<DataTableFeatures, Attendee>()
 export const columns = columnHelper.columns([
   columnHelper.accessor('checkedIn', {
     id: 'checkedIn',
-    header: () => null,
+    header: ({ column }) => h(AttendeeCheckboxHeader, { column }),
     cell: ({ row }) =>
       h(AttendeeCheckbox, {
         attendeeId: row.original.attendeeId,
         checkedIn: row.original.checkedIn
-      })
+      }),
+    filterFn: filterFn_equals
   }),
 
   columnHelper.accessor('orderId', {

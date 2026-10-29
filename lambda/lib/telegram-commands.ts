@@ -1,4 +1,10 @@
-import { sendMessage, setMessageReaction, TeleIdType, TeleMessage } from 'telegram-interface'
+import {
+  cleanseString,
+  sendMessage,
+  setMessageReaction,
+  TeleIdType,
+  TeleMessage
+} from 'telegram-interface'
 import { getEventsFromEventbrite } from './eventbrite-api'
 import {
   getAttendeeCountFromEventId,
@@ -36,7 +42,13 @@ export async function runCommand(msg: TeleMessageCommand) {
       return _runIdentify(msg.from.id, msg.chat.id)
 
     case '/check_signups':
-      return _runCheckSignups(msg.chat.id, msg.message_id, msg.message_thread_id as number)
+      const [_, trailing] = _extractArguments(msg.text)
+      return _runCheckSignups(
+        msg.chat.id,
+        msg.message_id,
+        msg.message_thread_id as number,
+        trailing
+      )
 
     case '/adminify':
       const email = msg.text.replace('/adminify', '').trim()
@@ -52,14 +64,15 @@ async function _runIdentify(userId: TeleIdType, chatId: TeleIdType) {
 async function _runCheckSignups(
   chatId: TeleIdType,
   msgId: TeleMessage['message_id'],
-  msgThreadId?: number
+  msgThreadId?: number,
+  eventId?: string
 ) {
   await setMessageReaction(botKey, chatId, msgId, [{ emoji: '👀', type: 'emoji' }])
 
   const events = await getEventsFromEventbrite(process.env.EVENTBRITE_TOK || '')
   events.sort((a, b) => (a.datetime > b.datetime ? -1 : a.datetime === b.datetime ? 0 : 1))
 
-  const latestEvent = events[0]
+  const latestEvent = events.find((e) => e.id === eventId) || events[0]
   const numberOfAttendees = await getAttendeeCountFromEventId(latestEvent.id)
   const numberOfOMs = await getOMCountFromEventId(latestEvent.id)
   const omList = await getOMsFromEventId(latestEvent.id)
@@ -70,7 +83,8 @@ async function _runCheckSignups(
   text += `OM Sign ups: ${numberOfOMs} / 5\n`
 
   omList?.forEach((om, i) => {
-    text += `  ${i + 1}. ${om.name} (${om.contact})\n`
+    text += `  ${i + 1}. ${cleanseString(om.name)} (📲 ${cleanseString(om.contact || '?')})\n`
+    text += `      socials: ${cleanseString(om.socials || '?')}\n\n`
   })
 
   text += `\nSign ups (w/o OMs): ${numberOfAttendees} / ${eventCapacity}`
@@ -81,7 +95,6 @@ async function _runCheckSignups(
 
   return setMessageReaction(botKey, chatId, msgId, [{ emoji: '🤓', type: 'emoji' }])
 }
-
 async function _runAdminify(
   email: string,
   chatId: TeleIdType,
@@ -149,7 +162,7 @@ function _extractCommand(text: string) {
 function _extractArguments(text: string) {
   let leading, trailing
   const leadingRegex = text.match(/(.+)\//)
-  const trailingRegex = text.match(/.*\/\w+ (.*)/)
+  const trailingRegex = text.match(/.*\/[^ ]+ (.*)/)
 
   if (leadingRegex) leading = leadingRegex[1].trim()
 

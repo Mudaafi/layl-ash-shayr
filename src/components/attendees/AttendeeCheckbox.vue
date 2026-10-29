@@ -6,7 +6,7 @@ const emit = defineEmits<{
   checked: []
 }>()
 
-const { attendeeId, checkedIn } = defineProps<{ attendeeId: string; checkedIn: boolean }>()
+const props = defineProps<{ attendeeId: string; checkedIn: boolean }>()
 
 const { toggleCheckInAttendee } = useEventbrite()
 
@@ -16,12 +16,17 @@ function onClick(ev: MouseEvent) {
   ev.preventDefault()
   ev.stopPropagation()
 
-  toggleCheckInAttendee(attendeeId)
+  toggleCheckInAttendee(props.attendeeId)
 }
 </script>
 
 <template>
-  <Checkbox @click="onClick" :default-value="checkedIn" :key="attendeeId" />
+  <Checkbox
+    @click="onClick"
+    :default-value="checkedIn"
+    v-model="props.checkedIn"
+    :key="attendeeId"
+  />
 </template>
 
 <style lang="scss" scoped></style>

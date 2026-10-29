@@ -33,7 +33,7 @@ export async function getOMCountFromEventId(eventId: string) {
 export async function getOMsFromEventId(eventId: string) {
   const raw = await supabase
     .from('event_attendees')
-    .select('name, telegram, phoneNumber')
+    .select('name, telegram, phoneNumber, socials')
     .eq('eventId', eventId)
     .eq('ticketType', 'Open Miccer')
 
