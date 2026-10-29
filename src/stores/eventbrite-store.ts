@@ -74,6 +74,7 @@ export default function useEventbrite() {
 
   async function insertWalkIn(attendee: Attendee) {
     if (!attendee) return
+
     const res = await supabase.from('event_attendees').insert(attendee)
     if (res.error) {
       toast.error('Error registering walk-in', {
@@ -83,9 +84,8 @@ export default function useEventbrite() {
       toast.success('Successfully registered walk-in', {
         description: `${attendee.name} registered`
       })
+      attendees.value = [attendee, ...attendees.value]
     }
-
-    attendees.value = [attendee, ...attendees.value]
   }
 
   return {
